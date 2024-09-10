@@ -31,6 +31,8 @@ Mon travail a non seulement permis de __répondre à toutes ces contraintes__,
 mais je l'ai surtout réalisé d'une manière robuste et fiable :
 __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière année chez Ecorobotix.
 
+![AVO ([origine de l'image](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
+
 ## Tornado (2019)
 
 J'ai contribué au projet Tornado pour l'équipe

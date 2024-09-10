@@ -31,6 +31,8 @@ The challenge was to develop a __sensor fusion algorithm__ with the following ch
 Not only my work allowed to __fulfill all these requirements__ but it was done in robust way:
 during my last year at Ecorobotix, __no bugs were reported__ related to this positioning software module.
 
+![AVO ([image origin](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
+
 ## Tornado (2019)
 
 I've been working on project Tornado for
