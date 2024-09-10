@@ -5,7 +5,7 @@ lang: fr
 
 Du __logiciel embarqué__ jusqu'aux interfaces utilisateurs,
 de __l'informatique scientifique de pointe__ jusqu'à la gestion de base de données,
-j'ai développé avec succes de nombreux logiciels innovants pour des industries variées.
+j'ai développé avec succès de nombreux logiciels innovants pour des industries variées.
 
 Les plus anciens tournent sans interruption depuis plus de 15 ans
 et continuent de rendre de fiers services à leurs utilisateurs.
@@ -55,34 +55,35 @@ Voir ma [page robotique](./robotics-fr.html) dédiée.
 ### Vision
 
 D'une simple détection d'objet à une configuration complexe impliquant plusieurs caméras,
-je peux résoudre des problèmes complexes en __maitrisant les concepts fondamentaux__
+je peux résoudre des problèmes pointus en __maitrisant les concepts fondamentaux__
 de la vision par ordinateur :
 
 * calibration des caméras
-* algorithme de traitement d'image
+* algorithmes de traitement d'images
 * détection, positionnement et mesure d'objets à distance
 * conversion entre les divers repères 2D/3D impliqués
 
 ### Bancs de test
 
-En concevant des bancs de tests automatiques pour divers industries, je leur ai permis de :
+En concevant des bancs de tests automatiques pour différents secteurs industriels,
+j'ai permis à ces entreprises de :
 
 * mesurer et améliorer la __qualité de leurs produits__
-* rendre leurs processus plus __efficace et rentable__
-* assurer le respect des normes règlementaires
+* rendre leurs processus plus __efficaces et rentables__
+* assurer le respect des normes réglementaires
 
 Mon expertise dans ce domaine s'est avérée bénéfique pour plusieurs industries :
 
-* fabricant de matériel férroviaire
+* fabricant de matériel ferroviaire
 * fabricant de pneumatiques
 
-### Qualité de développement
+### Qualité de développement logiciel
 
 Avec 20 ans d'expérience dans des contextes très variés,
-je maîtrise les compétences pour produire du code de haute qualité :
+je maîtrise les compétences nécessaires pour produire du code de haute qualité :
 
-* explorer et comprendre rapidement des __logiciels complexes__
+* explorer et comprendre rapidement des __bases de code complexes__
 * analyser, reproduire, documenter et corriger les bugs dans les logiciels existants
-* créer ou remodeler le code pour le rendre __simple, lisible et maintenable__
-* identifier les limitations en matière de performance et apporter les __optimisations appropriées__
+* créer ou refactorer le code pour le rendre __simple, lisible et maintenable__
+* identifier les limitations de performance et apporter les __optimisations appropriées__
 * créer ou adapter les tests pour assurer la fiabilité du code
