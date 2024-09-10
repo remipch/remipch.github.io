@@ -25,7 +25,7 @@ I love:
 
 ### Contact
 
-📧  [E-mail](mailto:remipch@proton.me) &nbsp; &nbsp;
+![](images/email.svg){width=1em height=1em}  [E-mail](mailto:remipch@proton.me) &nbsp; &nbsp;
 ![](images/linkedin.ico){width=1em height=1em}  [LinkedIn](https://www.linkedin.com/in/peuchotremi)
 
 ### Location
