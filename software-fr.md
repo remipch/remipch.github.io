@@ -18,6 +18,7 @@ et continuent de rendre de fiers services à leurs utilisateurs.
 ![](images/csharp.png){width=1em height=1em} C# &nbsp; &nbsp;
 ![](images/python.ico){width=1em height=1em} Python &nbsp; &nbsp;
 ![](images/java.ico){width=1em height=1em} Java &nbsp; &nbsp;
+
 ![](images/sql.webp){width=1em height=1em} SQL &nbsp; &nbsp;
 ![](images/labview.webp){width=1em height=1em} LabVIEW &nbsp; &nbsp;
 
