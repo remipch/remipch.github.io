@@ -35,8 +35,6 @@ __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière a
 
 J'ai contribué au projet Tornado pour l'Institut Pascal.
 
-![Navette EZ10](images/ez10.jpg)
-
 Ma mission consistait à enrichier la __navette autonome__ EZ10
 pour démontrer des fonctionnalités innovantes en milieu urbain :
 
@@ -49,12 +47,12 @@ pour démontrer des fonctionnalités innovantes en milieu urbain :
 Basé sur le framework robotique développé par l'équipe en __C++ sous ROS__,
 j'ai développé une interface utilisateur pour répondre aux besoins de ce démonstrateur.
 
+![Navette EZ10](images/ez10.jpg)
+
 ## Baudet-Rob (2018-2019)
 
 Aroco est une __plateforme robotique autonome tout terrain__
 développée par l'unité de recherche [TSCF](https://tscf.clermont.hub.inrae.fr/) à l'IRSTEA (maintenant INRAE).
-
-![Aroco robot ([origine de l'image](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 Je suis intervenu dans la finalisation d'un projet de recherche
 consistant à localiser le robot en environnement extérieur en utilisant un radar panoramique :
@@ -70,5 +68,7 @@ consistant à localiser le robot en environnement extérieur en utilisant un rad
 * la __localisation temps réel__ en utilisant le radar (sans GPS)
 * l'enregistrement et le suivi de trajectoire avec une répétabilité __< 10 cm__
 * en utilisant uniquement le __logiciel embarqué autonome__ sur le robot
+
+![Aroco robot ([origine de l'image](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 ![Vue satellite à gauche / carte radar à droite (images extraites de la [publication scientifique](https://www.researchgate.net/publication/336133596_Robot_Localization_and_Navigation_with_a_Ground-_Based_Microwave_Radar))](images/radar_map.jpg)

@@ -35,8 +35,6 @@ during my last year at Ecorobotix, __no bugs were reported__ related to this pos
 
 I've been working on project Tornado for Institut Pascal.
 
-![EZ10 shuttle](images/ez10.jpg)
-
 My mission was to adapt the EZ10 __autonomous shuttle__
 to demonstrate innovative functionalities centered in urban areas:
 
@@ -49,12 +47,12 @@ to demonstrate innovative functionalities centered in urban areas:
 I used the existing robotic framework developed by the team in __C++ under ROS__
 and developed a user interface on top of that to fulfill the needs of this demonstrator.
 
+![EZ10 shuttle](images/ez10.jpg)
+
 ## Baudet-Rob (2018-2019)
 
 Aroco is an __autonomous off-road robotics platform__
 developped by [TSCF](https://tscf.clermont.hub.inrae.fr/) research unit at IRSTEA (now INRAE).
-
-![Aroco robot ([image origin](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 My work was to finalize a long-term research project to provide the robot
 a way to locate itself in an external environment using a panoramic radar:
@@ -70,5 +68,7 @@ At the end of my mission, the robot was __successfully able to demonstrate__:
 * __real-time localization__ using the radar (without GPS)
 * path recording and following with a repeatability __better than 10 cm__
 * using __autonomous embedded software__ on the robot
+
+![Aroco robot ([image origin](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 ![Satellite view on the left / radar map on the right (images taken from the [conference paper](https://www.researchgate.net/publication/336133596_Robot_Localization_and_Navigation_with_a_Ground-_Based_Microwave_Radar))](images/radar_map.jpg)
