@@ -1,0 +1,30 @@
+#!/bin/bash
+
+ALL_PAGES="index software robotics electronics solar"
+
+for PAGE in $ALL_PAGES
+do
+    echo "Convert '$PAGE' page"
+
+    pandoc --from markdown \
+    --to html5 \
+    --css=simple.css \
+    --standalone \
+    --template=custom_template.html \
+    -o $PAGE.html \
+    -V langage-en=true \
+    -V page=$PAGE \
+    -V navbar-$PAGE=true \
+    $PAGE.md
+
+    pandoc --from markdown \
+    --to html5 \
+    --css=simple.css \
+    --standalone \
+    --template=custom_template.html \
+    -o $PAGE-fr.html \
+    -V page=$PAGE \
+    -V navbar-$PAGE=true \
+    $PAGE-fr.md
+done
+

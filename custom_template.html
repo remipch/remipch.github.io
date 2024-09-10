@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="$lang$" xml:lang="$lang$"$if(dir)$ dir="$dir$"$endif$>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Rémi PEUCHOT" />
+$if(keywords)$
+  <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
+$endif$
+  <title>Rémi PEUCHOT – $if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
+  <style>
+    $styles.html()$
+  </style>
+$for(css)$
+  <link rel="stylesheet" href="$css$" />
+$endfor$
+$if(math)$
+  $math$
+$endif$
+$for(header-includes)$
+  $header-includes$
+$endfor$
+</head>
+<body>
+$for(include-before)$
+$include-before$
+$endfor$
+
+<header id="title-block-header">
+<h1 style="font-size: 2.8rem;">Rémi PEUCHOT</h1>
+<img src="images/tree.svg" width="90">
+
+<nav>
+$if(langage-en)$
+<a href="index.html" $if(navbar-index)$ class="current" $endif$ >About me</a>
+<a href="software.html" $if(navbar-software)$ class="current" $endif$>Software</a>
+<a href="robotics.html" $if(navbar-robotics)$ class="current" $endif$>Robotics</a>
+<a href="electronics.html" $if(navbar-electronics)$ class="current" $endif$>Electronics</a>
+<a href="solar.html" $if(navbar-solar)$ class="current" $endif$>Solar concentrator </a>
+<br>
+<a href="$page$.html" title="Switch to English" class="current">🇺🇸</a>
+<a href="$page$-fr.html" title="Passer en français">🇫🇷</a>
+$else$
+<a href="index-fr.html" $if(navbar-index)$ class="current" $endif$ >À propos</a>
+<a href="software-fr.html" $if(navbar-software)$ class="current" $endif$>Logiciel</a>
+<a href="robotics-fr.html" $if(navbar-robotics)$ class="current" $endif$>Robotique</a>
+<a href="electronics-fr.html" $if(navbar-electronics)$ class="current" $endif$>Électronique</a>
+<a href="solar-fr.html" $if(navbar-solar)$ class="current" $endif$>Concentrateur Solaire</a>
+<br>
+<a href="$page$.html" title="Switch to English">🇺🇸</a>
+<a href="$page$-fr.html" title="Passer en français" class="current">🇫🇷</a>
+$endif$
+</nav>
+</header>
+
+<h1>$pagetitle$</h1>
+
+$body$
+
+</body>
+
+<footer>
+  <p>Copyright © 2024 Rémi PEUCHOT</p>
+$if(langage-en)$
+  <p>This page uses <a href="https://github.com/kevquirk/simple.css">simple.css</a>
+  and <a href="https://pandoc.org">pandoc</a>.</p>
+$else$
+  <p>Cette page utilise <a href="https://github.com/kevquirk/simple.css">simple.css</a>
+  et <a href="https://pandoc.org">pandoc</a>.</p>
+$endif$
+</footer>
+</html>

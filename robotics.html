@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Rémi PEUCHOT" />
+  <title>Rémi PEUCHOT – Robotics</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="simple.css" />
+</head>
+<body>
+
+<header id="title-block-header">
+<h1 style="font-size: 2.8rem;">Rémi PEUCHOT</h1>
+<img src="images/tree.svg" width="90">
+
+<nav>
+<a href="index.html"  >About me</a>
+<a href="software.html" >Software</a>
+<a href="robotics.html"  class="current" >Robotics</a>
+<a href="electronics.html" >Electronics</a>
+<a href="solar.html" >Solar concentrator </a>
+<br>
+<a href="robotics.html" title="Switch to English" class="current">🇺🇸</a>
+<a href="robotics-fr.html" title="Passer en français">🇫🇷</a>
+</nav>
+</header>
+
+<h1>Robotics</h1>
+
+<p>Curious and passionate about robotics, I’ve been involved in a number of innovative R&amp;D projects.</p>
+<p>I bring and implement concrete, reliable solutions to the challenges of mobile robotics in open environments.</p>
+<h2 id="ecorobotix-2020-2022">Ecorobotix (2020-2022)</h2>
+<p>I’ve been working on Ecorobotix machines:</p>
+<ul>
+<li>AVO, an autonomous robot which offers smart and ultra-ecological spraying</li>
+<li>ARA, an ultra-high precision sprayer which enables the ultra-targeted application of herbicides, fungicides, insecticides or fertilisers</li>
+</ul>
+<p>I was in charge of specifying and implementing the <strong>positioning software module</strong> for these machines.</p>
+<p>The challenge was to develop a <strong>sensor fusion algorithm</strong> with the following characteristics:</p>
+<ul>
+<li>accepting <strong>heterogeneous sensor data</strong> (GPS and visual odometry measured from different locations on the machine)</li>
+<li>accepting <strong>irregular sensor samplings</strong> (with different frequencies and potential arbitrary delays)</li>
+<li>accepting <strong>missing or erroneous</strong> sensor data</li>
+<li>running embedded on the machine, using the lowest CPU resource possible</li>
+<li>providing <strong>real-time prediction estimation</strong> (predict the future trajectory of a plant detected in the past)</li>
+<li>within a tolerance of a <strong>few centimetres</strong></li>
+</ul>
+<p>Not only my work allowed to <strong>fulfill all these requirements</strong> but it was done in robust way: during my last year at Ecorobotix, <strong>no bugs were reported</strong> related to this positioning software module.</p>
+<h2 id="tornado-2019">Tornado (2019)</h2>
+<p>I’ve been working on project Tornado for Institut Pascal.</p>
+<p>My mission was the adaptation of an <strong>autonomous vehicle</strong> to demonstrate innovative functionalities centered in urban areas:</p>
+<ul>
+<li><strong>robot positioning</strong> by visual odometry</li>
+<li><strong>trajectory control</strong> for accurate path navigation</li>
+<li>communication between vehicles and infrastructure</li>
+<li>intelligent interaction with other users (pedestrians, cyclists, motorists, etc.)</li>
+<li>management system for the fleet of heterogeneous vehicles</li>
+</ul>
+<p>I used the existing robotic framework developed by the team in <strong>C++ under ROS</strong> and developed a user interface on top of that to fulfill the needs of this demonstrator.</p>
+<h2 id="baudet-rob-2018-2019">Baudet-Rob (2018-2019)</h2>
+<p>Baudet-Rob is an <strong>autonomous off-road robotics platform</strong> developped by ROMEA team at Inrae.</p>
+<p>My work was to finalize a long-term research project to provide the robot a way to locate itself in an external environment using a panoramic radar:</p>
+<ul>
+<li>implementation in <strong>C++ under ROS</strong> of cutting-edge research algorithms (antispeckle filter, <strong>localization and tracking</strong> by radar images correlation)</li>
+<li>use and enhancement of the existing robotic framework developed by the team (<strong>multi-sensor data fusion</strong>, control law, configuration tools)</li>
+<li>development of a <strong>real demonstrator</strong> based on Baudet-Rob platform</li>
+</ul>
+<p>At the end of my mission, the robot was <strong>successfully able to demonstrate</strong>:</p>
+<ul>
+<li><strong>real-time localization</strong> using the radar (without GPS)</li>
+<li>path recording and following with a repeatability of <strong>better than 10 cm</strong></li>
+<li>using <strong>autonomous embedded software</strong> on the robot</li>
+</ul>
+
+</body>
+
+<footer>
+  <p>Copyright © 2024 Rémi PEUCHOT</p>
+  <p>This page uses <a href="https://github.com/kevquirk/simple.css">simple.css</a>
+  and <a href="https://pandoc.org">pandoc</a>.</p>
+</footer>
+</html>
