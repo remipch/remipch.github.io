@@ -31,9 +31,9 @@ Mon travail a non seulement permis de __répondre à toutes ces contraintes__,
 mais je l'ai surtout réalisé d'une manière robuste et fiable :
 __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière année chez Ecorobotix.
 
-![AVO ([origine de l'image](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
+![Robot autonome AVO ([origine de l'image](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
 
-![ARA ([origine de l'image](https://ecorobotix.com/fr/ara/))](images/ara.jpg)
+![Sprayeur ultra-haute précision ARA ([origine de l'image](https://ecorobotix.com/fr/ara/))](images/ara.jpg)
 
 ## Tornado (2019)
 
@@ -52,7 +52,7 @@ pour démontrer des fonctionnalités innovantes en milieu urbain :
 Basé sur le framework robotique développé par l'équipe en __C++ sous ROS__,
 j'ai développé une interface utilisateur pour répondre aux besoins de ce démonstrateur.
 
-![Navette EZ10](images/ez10.jpg)
+![Navette autonome EZ10](images/ez10.jpg)
 
 ## Baudet-Rob (2018-2019)
 
@@ -74,6 +74,6 @@ consistant à localiser le robot en environnement extérieur en utilisant un rad
 * l'enregistrement et le suivi de trajectoire avec une répétabilité __< 10 cm__
 * en utilisant uniquement le __logiciel embarqué autonome__ sur le robot
 
-![Aroco robot ([origine de l'image](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
+![Robot autonome Aroco ([origine de l'image](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 ![Vue satellite à gauche / carte radar à droite (images extraites de la [publication scientifique](https://www.researchgate.net/publication/336133596_Robot_Localization_and_Navigation_with_a_Ground-_Based_Microwave_Radar))](images/radar_map.jpg)
