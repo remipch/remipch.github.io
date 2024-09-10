@@ -30,7 +30,7 @@ J'aime :
 
 ### Localisation
 
-📍 Puy-de-Dôme, France
+![](images/location.png){width=1em height=1em} Puy-de-Dôme, France
 
 🌍 Je peux aussi travailler à distance
 

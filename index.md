@@ -30,7 +30,7 @@ I love:
 
 ### Location
 
-📍 Puy-de-Dôme, France
+![](images/location.png){width=1em height=1em} Puy-de-Dôme, France
 
 🌍 I can also work remotely
 
