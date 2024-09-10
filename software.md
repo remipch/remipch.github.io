@@ -52,7 +52,7 @@ See my dedicated [robotics page](./robotics.html).
 
 ### Computer vision
 
-From simple object detection to complex configurations that require the crossed fields of view of multiple cameras,
+From simple object detection to complex configurations requiring multiple cameras,
 I'm able to solve challenging problems by __mastering the fundamentals__ of computer vision:
 
 * camera calibration
@@ -65,10 +65,10 @@ I'm able to solve challenging problems by __mastering the fundamentals__ of comp
 By building automated test stations for various industries, I have enabled them to:
 
 * measure and improve the __quality of their products__
-* make their processes more __cost-effective and productive__
+* make their processes more __cost effective and productive__
 * ensure compliance with their regulatory specifications
 
-My expertise in this field has proved beneficial to several industries:
+My expertise in this field has proven beneficial to several industries:
 
 * railway equipments manufacturer
 * tires manufacturer

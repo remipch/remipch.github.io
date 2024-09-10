@@ -22,7 +22,7 @@ du relais à tester et de mesurer les réactions en retour :
 * temps de réponse
 * courants de déclenchement
 * conductivité des contacts
-* test diélectriques
+* tests diélectriques
 * réaction à certains montages électriques
 
 ![](images/contact_card.png)

@@ -18,17 +18,17 @@ d'herbicide, de fongicides, d'insecticide et d'engrais
 
 Ma mission consistait à spécifier et implémenter le __module de localisation__ de ces deux machines.
 
-Le défi était de mettre au point un __algorithme de fusion de capteurs__ avec les caractéristiques suivantes :
+Le défi était de mettre au point un __algorithme de fusion de capteurs__ répondant aux caractéristiques suivantes :
 
 * accepter des __capteurs hétérogènes__ (GPS et odométrie visuelle prise depuis plusieurs endroits sur la machine)
 * accepter un __échantillonnage irrégulier__ (fréquences différentes selon les capteurs et délais arbitraires de réception)
-* accepter des __mesures manquantes ou erronnées__
+* traiter les __mesures manquantes ou erronées__
 * s'exécuter en embarqué sur la machine, en utilisant le moins de CPU possible
 * fournir une __prédiction temps réel__ (prédire la trajectoire future d'une plante détectée dans le passé)
 * avec une __précision de quelques centimètres__
 
-Mon travail a non seulement permis de __répondre à toutes ces contraintes__,
-mais je l'ai surtout réalisé d'une manière robuste et fiable :
+Non seulement mon travail à permis de __répondre à toutes ces contraintes__,
+mais il l'a surtout été d'une manière robuste et fiable :
 __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière année chez Ecorobotix.
 
 ![Robot autonome AVO ([source](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
@@ -46,10 +46,10 @@ pour démontrer des fonctionnalités innovantes en milieu urbain :
 * __positionnement de robot__ par odométrie visuelle
 * __contrôle de trajectoire__ pour une navigation précise
 * communication entre les véhicules et l'infrastructure
-* interaction intelligente avec les autres usager (piétons, cyclistes, automobilistes, etc.)
+* interaction intelligente avec les autres usagers (piétons, cyclistes, automobilistes, etc.)
 * système de gestion de flotte de véhicules hétérogènes
 
-Basé sur le framework robotique développé par l'équipe en __C++ sous ROS__,
+Basée sur le framework robotique développé par l'équipe en __C++ sous ROS__,
 j'ai développé une interface utilisateur pour répondre aux besoins de ce démonstrateur.
 
 ![Navette autonome EZ10](images/ez10.jpg)
@@ -63,14 +63,14 @@ Je suis intervenu dans la finalisation d'un projet de recherche
 consistant à localiser le robot en environnement extérieur en utilisant un radar panoramique :
 
 * implementation en __C++ sous ROS__ d'algorithmes de recherche innovants
-(filtre antispeckle, localisation et suivi par correlation d'images radar)
+(filtre antispeckle, localisation et suivi par corrélation d'images radar)
 * utilisation et amélioration du framework robotique développé par l'équipe
 (fusion de capteurs, loi de contrôle, outils de configuration)
 * développement d'un __démonstrateur fonctionnel__ basé sur le robot Aroco
 
 À la fin de ma mission, le robot était __effectivement capable de démontrer__ :
 
-* la __localisation temps réel__ en utilisant le radar (sans GPS)
+* la __localisation en temps réel__ en utilisant le radar (sans GPS)
 * l'enregistrement et le suivi de trajectoire avec une répétabilité __< 10 cm__
 * en utilisant uniquement le __logiciel embarqué autonome__ sur le robot
 

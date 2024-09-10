@@ -15,7 +15,7 @@ I've been working on [Ecorobotix](https://ecorobotix.com/en/) machines:
 
 * AVO, an autonomous robot which offers smart and ultra-ecological spraying
 * ARA, an ultra-high precision sprayer which enables the ultra-targeted application of herbicides,
-fungicides, insecticides or fertilisers
+fungicides, insecticides or fertilizers
 
 I was in charge of specifying and implementing the __positioning software module__ for these machines.
 
@@ -26,9 +26,9 @@ The challenge was to develop a __sensor fusion algorithm__ with the following ch
 * accepting __missing or erroneous__ sensor data
 * running embedded on the machine, using the lowest CPU resource possible
 * providing __real-time prediction estimation__ (predict the future trajectory of a plant detected in the past)
-* within a tolerance of a __few centimetres__
+* within a tolerance of a __few centimeters__
 
-Not only my work allowed to __fulfill all these requirements__ but it was done in robust way:
+Not only did my work __meet all these requirements__ but it did so in robust way:
 during my last year at Ecorobotix, __no bugs were reported__ related to this positioning software module.
 
 ![AVO autonomous robot ([source](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
@@ -43,34 +43,34 @@ I've been working on project Tornado for
 My mission was to adapt the EZ10 __autonomous shuttle__
 to demonstrate innovative functionalities centered in urban areas:
 
-* __robot positioning__ by visual odometry
+* __robot positioning__ through visual odometry
 * __trajectory control__ for accurate path navigation
-* communication between vehicles and infrastructure
-* intelligent interaction with other users (pedestrians, cyclists, motorists, etc.)
-* management system for the fleet of heterogeneous vehicles
+* communication between vehicles and the infrastructure
+* intelligent interaction with other users (pedestrians, cyclists, drivers, etc.)
+* fleet management system for heterogeneous vehicles
 
-I used the existing robotic framework developed by the team in __C++ under ROS__
-and developed a user interface on top of that to fulfill the needs of this demonstrator.
+I used the existing robotics framework developed by the team in __C++ under ROS__
+and developed a user interface on top of it to meet the needs of this demonstrator.
 
 ![EZ10 autonomous shuttle](images/ez10.jpg)
 
 ## Baudet-Rob (2018-2019)
 
 Aroco is an __autonomous off-road robotics platform__
-developped by [TSCF](https://tscf.clermont.hub.inrae.fr/) research unit at IRSTEA (now INRAE).
+developed by [TSCF](https://tscf.clermont.hub.inrae.fr/) research unit at IRSTEA (now INRAE).
 
-My work was to finalize a long-term research project to provide the robot
-a way to locate itself in an external environment using a panoramic radar:
+My work was to complete a long-term research project to provide the robot
+with a way to locate itself in an external environment using a panoramic radar:
 
 * implementation in __C++ under ROS__ of cutting-edge research algorithms
 (antispeckle filter, __localization and tracking__ by radar images correlation)
-* use and enhancement of the existing robotic framework developed by the team
+* usage and extension of the existing robotics framework developed by the team
 (__multi-sensor data fusion__, control law, configuration tools)
-* development of a __real demonstrator__ based on Aroco robot
+* development of a __real demonstrator__ based on the Aroco robot
 
-At the end of my mission, the robot was __successfully able to demonstrate__:
+At the end of my mission, the robot was __able to successfully demonstrate__:
 
-* __real-time localization__ using the radar (without GPS)
+* __real-time localization__ by radar (without GPS)
 * path recording and following with a repeatability __better than 10 cm__
 * using __autonomous embedded software__ on the robot
 

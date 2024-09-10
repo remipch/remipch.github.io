@@ -55,7 +55,7 @@ Voir ma [page robotique](./robotics-fr.html) dédiée.
 ### Vision
 
 D'une simple détection d'objet à une configuration complexe impliquant plusieurs caméras,
-je peux résoudre des problèmes pointus en __maitrisant les concepts fondamentaux__
+je peux résoudre des problèmes pointus en __maîtrisant les concepts fondamentaux__
 de la vision par ordinateur :
 
 * calibration des caméras
