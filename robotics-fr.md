@@ -31,9 +31,9 @@ Mon travail a non seulement permis de __répondre à toutes ces contraintes__,
 mais je l'ai surtout réalisé d'une manière robuste et fiable :
 __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière année chez Ecorobotix.
 
-![Robot autonome AVO ([origine de l'image](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
+![Robot autonome AVO ([source](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
 
-![Sprayeur ultra-haute précision ARA ([origine de l'image](https://ecorobotix.com/fr/ara/))](images/ara.jpg)
+![Sprayeur ultra-haute précision ARA ([source](https://ecorobotix.com/fr/ara/))](images/ara.jpg)
 
 ## Tornado (2019)
 
@@ -74,6 +74,6 @@ consistant à localiser le robot en environnement extérieur en utilisant un rad
 * l'enregistrement et le suivi de trajectoire avec une répétabilité __< 10 cm__
 * en utilisant uniquement le __logiciel embarqué autonome__ sur le robot
 
-![Robot autonome Aroco ([origine de l'image](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
+![Robot autonome Aroco ([source](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 ![Vue satellite à gauche / carte radar à droite (images extraites de la [publication scientifique](https://www.researchgate.net/publication/336133596_Robot_Localization_and_Navigation_with_a_Ground-_Based_Microwave_Radar))](images/radar_map.jpg)

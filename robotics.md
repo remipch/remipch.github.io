@@ -31,9 +31,9 @@ The challenge was to develop a __sensor fusion algorithm__ with the following ch
 Not only my work allowed to __fulfill all these requirements__ but it was done in robust way:
 during my last year at Ecorobotix, __no bugs were reported__ related to this positioning software module.
 
-![AVO autonomous robot ([image origin](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
+![AVO autonomous robot ([source](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
 
-![ARA ultra-high precision sprayer ([image origin](https://ecorobotix.com/fr/ara/))](images/ara.jpg)
+![ARA ultra-high precision sprayer ([source](https://ecorobotix.com/fr/ara/))](images/ara.jpg)
 
 ## Tornado (2019)
 
@@ -74,6 +74,6 @@ At the end of my mission, the robot was __successfully able to demonstrate__:
 * path recording and following with a repeatability __better than 10 cm__
 * using __autonomous embedded software__ on the robot
 
-![Aroco autonomous robot ([image origin](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
+![Aroco autonomous robot ([source](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 ![Satellite view on the left / radar map on the right (images taken from the [conference paper](https://www.researchgate.net/publication/336133596_Robot_Localization_and_Navigation_with_a_Ground-_Based_Microwave_Radar))](images/radar_map.jpg)
