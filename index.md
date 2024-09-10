@@ -18,7 +18,7 @@ I love:
 
 ## Info
 
-### Resume
+### Resume (TODO)
 
 🇺🇸 [English](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
 🇫🇷 [French](Remi-PEUCHOT-fr.pdf)

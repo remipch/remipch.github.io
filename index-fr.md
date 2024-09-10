@@ -18,7 +18,7 @@ J'aime :
 
 ## Info
 
-### CV
+### CV (TODO)
 
 🇺🇸 [Anglais](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
 🇫🇷 [Français](Remi-PEUCHOT-fr.pdf)
