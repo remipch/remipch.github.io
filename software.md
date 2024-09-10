@@ -28,7 +28,7 @@ The oldest have been running for over 15 years and are still providing __great v
 
 ### Embedded platforms
 
-![](images/nvidia.ico){width=1em height=1em} NVidia Jetson Xavier &nbsp; &nbsp;
+![](images/nvidia.ico){width=1em height=1em} NVidia Jetson &nbsp; &nbsp;
 ![](images/espressif.png){width=1em height=1em} ESP32 &nbsp; &nbsp;
 ![](images/microchip.ico){width=1em height=1em} Microchip &nbsp; &nbsp;
 

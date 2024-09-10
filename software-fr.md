@@ -30,7 +30,7 @@ et continuent de rendre de fiers services à leurs utilisateurs.
 
 ### Plateformes embarquées
 
-![](images/nvidia.ico){width=1em height=1em} NVidia Jetson Xavier &nbsp; &nbsp;
+![](images/nvidia.ico){width=1em height=1em} NVidia Jetson &nbsp; &nbsp;
 ![](images/espressif.png){width=1em height=1em} ESP32 &nbsp; &nbsp;
 ![](images/microchip.ico){width=1em height=1em} Microchip &nbsp; &nbsp;
 
