@@ -49,8 +49,10 @@ and developed a user interface on top of that to fulfill the needs of this demon
 
 ## Baudet-Rob (2018-2019)
 
-Baudet-Rob is an __autonomous off-road robotics platform__
-developped by ROMEA team at Inrae.
+Aroco is an __autonomous off-road robotics platform__
+developped by [TSCF](https://tscf.clermont.hub.inrae.fr/) research unit at IRSTEA (now INRAE).
+
+![Aroco robot ([image origin](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 My work was to finalize a long-term research project to provide the robot
 a way to locate itself in an external environment using a panoramic radar:
@@ -59,11 +61,12 @@ a way to locate itself in an external environment using a panoramic radar:
 (antispeckle filter, __localization and tracking__ by radar images correlation)
 * use and enhancement of the existing robotic framework developed by the team
 (__multi-sensor data fusion__, control law, configuration tools)
-* development of a __real demonstrator__ based on Baudet-Rob platform
+* development of a __real demonstrator__ based on Aroco robot
 
 At the end of my mission, the robot was __successfully able to demonstrate__:
 
 * __real-time localization__ using the radar (without GPS)
-* path recording and following with a repeatability of __better than 10 cm__
+* path recording and following with a repeatability __better than 10 cm__
 * using __autonomous embedded software__ on the robot
 
+![Satellite view on the left / radar map on the right (images taken from the [conference paper](https://www.researchgate.net/publication/336133596_Robot_Localization_and_Navigation_with_a_Ground-_Based_Microwave_Radar))](images/radar_map.jpg)

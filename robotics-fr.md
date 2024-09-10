@@ -49,20 +49,24 @@ j'ai développé une interface utilisateur pour répondre aux besoins de ce dém
 
 ## Baudet-Rob (2018-2019)
 
-Baudet-Rob est une __plateforme robotique autonome tout terrain__
-développée par l'équipe ROMEA à l'Inrae.
+Aroco est une __plateforme robotique autonome tout terrain__
+développée par l'unité de recherche [TSCF](https://tscf.clermont.hub.inrae.fr/) à l'IRSTEA (maintenant INRAE).
+
+![Aroco robot ([origine de l'image](https://www.agrotechnopole.fr/nos-moyens/robotique-agricole-et-mobilite-off-road/))](images/aroco.jpg)
 
 Je suis intervenu dans la finalisation d'un projet de recherche
-consistant à localiser un robot en environnement extérieur en utilisant un radar panoramique :
+consistant à localiser le robot en environnement extérieur en utilisant un radar panoramique :
 
 * implementation en __C++ sous ROS__ d'algorithmes de recherche innovants
 (filtre antispeckle, localisation et suivi par correlation d'images radar)
 * utilisation et amélioration du framework robotique développé par l'équipe
 (fusion de capteurs, loi de contrôle, outils de configuration)
-* développement d'un __démonstrateur fonctionnel__ basé sur la plateforme Baudet-Rob
+* développement d'un __démonstrateur fonctionnel__ basé sur le robot Aroco
 
 À la fin de ma mission, le robot était __effectivement capable de démontrer__ :
 
 * la __localisation temps réel__ en utilisant le radar (sans GPS)
-* l'enregistrement et le suivi de trajectoire avec une répétabilité __meilleure que 10 cm__
+* l'enregistrement et le suivi de trajectoire avec une répétabilité __< 10 cm__
 * en utilisant uniquement le __logiciel embarqué autonome__ sur le robot
+
+![Vue satellite à gauche / carte radar à droite (images extraites de la [publication scientifique](https://www.researchgate.net/publication/336133596_Robot_Localization_and_Navigation_with_a_Ground-_Based_Microwave_Radar))](images/radar_map.jpg)
