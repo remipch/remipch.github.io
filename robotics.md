@@ -11,7 +11,7 @@ to the challenges of mobile robotics in open environments.
 
 ## Ecorobotix (2020-2022)
 
-I've been working on Ecorobotix machines:
+I've been working on [Ecorobotix](https://ecorobotix.com/en/) machines:
 
 * AVO, an autonomous robot which offers smart and ultra-ecological spraying
 * ARA, an ultra-high precision sprayer which enables the ultra-targeted application of herbicides,
