@@ -33,6 +33,8 @@ during my last year at Ecorobotix, __no bugs were reported__ related to this pos
 
 ![AVO ([image origin](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
 
+![ARA ([image origin](https://ecorobotix.com/fr/ara/))](images/ara.jpg)
+
 ## Tornado (2019)
 
 I've been working on project Tornado for

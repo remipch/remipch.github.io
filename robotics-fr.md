@@ -33,6 +33,8 @@ __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière a
 
 ![AVO ([origine de l'image](https://ecorobotix.com/fr/avo/))](images/avo.jpg)
 
+![ARA ([origine de l'image](https://ecorobotix.com/fr/ara/))](images/ara.jpg)
+
 ## Tornado (2019)
 
 J'ai contribué au projet Tornado pour l'équipe
