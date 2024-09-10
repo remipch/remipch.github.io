@@ -35,7 +35,9 @@ __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière a
 
 J'ai contribué au projet Tornado pour l'Institut Pascal.
 
-Ma mission consistait à adapter un véhicule autonome
+![Navette EZ10](images/ez10.jpg)
+
+Ma mission consistait à enrichier la __navette autonome__ EZ10
 pour démontrer des fonctionnalités innovantes en milieu urbain :
 
 * __positionnement de robot__ par odométrie visuelle

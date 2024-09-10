@@ -35,7 +35,9 @@ during my last year at Ecorobotix, __no bugs were reported__ related to this pos
 
 I've been working on project Tornado for Institut Pascal.
 
-My mission was the adaptation of an __autonomous vehicle__
+![EZ10 shuttle](images/ez10.jpg)
+
+My mission was to adapt the EZ10 __autonomous shuttle__
 to demonstrate innovative functionalities centered in urban areas:
 
 * __robot positioning__ by visual odometry
