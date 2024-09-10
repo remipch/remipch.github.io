@@ -33,7 +33,8 @@ __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière a
 
 ## Tornado (2019)
 
-J'ai contribué au projet Tornado pour l'Institut Pascal.
+J'ai contribué au projet Tornado pour l'équipe
+[PerSyst](http://www.institutpascal.uca.fr/index.php/fr/persyst) à Institut Pascal.
 
 Ma mission consistait à enrichier la __navette autonome__ EZ10
 pour démontrer des fonctionnalités innovantes en milieu urbain :

@@ -33,7 +33,8 @@ during my last year at Ecorobotix, __no bugs were reported__ related to this pos
 
 ## Tornado (2019)
 
-I've been working on project Tornado for Institut Pascal.
+I've been working on project Tornado for
+[PerSyst](http://www.institutpascal.uca.fr/index.php/en/persyst) team at Institut Pascal.
 
 My mission was to adapt the EZ10 __autonomous shuttle__
 to demonstrate innovative functionalities centered in urban areas:
