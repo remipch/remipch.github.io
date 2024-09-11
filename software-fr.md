@@ -48,7 +48,7 @@ et continuent de rendre de fiers services à leurs utilisateurs.
 
 ## Domaines d'expertise
 
-### Robotique
+### Robotique mobile
 
 Voir ma [page robotique](./robotics-fr.html) dédiée.
 

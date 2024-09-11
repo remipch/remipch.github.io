@@ -1,5 +1,5 @@
 ---
-title: Robotics
+title: Mobile robotics
 lang: en
 ---
 

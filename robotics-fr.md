@@ -1,5 +1,5 @@
 ---
-title: Robotique
+title: Robotique mobile
 lang: fr
 ---
 
