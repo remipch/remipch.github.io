@@ -37,7 +37,33 @@
 
 <h1>Solar concentrator</h1>
 
-
+<p>In 2023 and 2024 I designed and built a solar concentrator:</p>
+<ul>
+<li>original <a href="https://github.com/remipch/solar_concentrator/blob/master/mechanics/README.md">mechanical design</a></li>
+<li>development of a specific <a href="https://github.com/remipch/solar_concentrator/blob/master/electronics/README.md">electronic board</a></li>
+<li>embedded software on an <a href="https://www.gotronic.fr/art-module-esp32-cam-32630.htm">ESP32-CAM</a> module</li>
+</ul>
+<p>This project is open-source and documented in detail <a href="https://github.com/remipch/solar_concentrator">here</a>.</p>
+<figure>
+<img src="images/solar_concentrator.png" alt="" /><figcaption>Orientable panel (<a href="https://remipch.github.io/solar_concentrator/view_3d.html?model=solar_panel_assembled">clic here</a> to open the 3D model)</figcaption>
+</figure>
+<p>One of the challenges of this project was to embed all the algorithms on a low-cost microcontroller board:</p>
+<ul>
+<li>Processor: ESP32 at 240 MHz</li>
+<li>RAM: 520 Kb + 4 Mb (PSRAM)</li>
+<li>Camera sensor: OV2640</li>
+<li>Price: 12€</li>
+</ul>
+<p>All the code was successfully implemented on this platform:</p>
+<ul>
+<li>high-level application logic</li>
+<li>user interface (embedded http server accessible via WiFi)</li>
+<li>image acquisition and processing</li>
+<li>motor regulation and control</li>
+</ul>
+<figure>
+<img src="images/solar_concentrator.jpg" alt="" /><figcaption>Prototype of the orientable panel with the supervisor</figcaption>
+</figure>
 
 </body>
 
