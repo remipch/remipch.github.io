@@ -53,7 +53,7 @@ See my dedicated [robotics page](./robotics.html).
 ### Computer vision
 
 From simple object detection to complex configurations requiring multiple cameras,
-I'm able to solve challenging problems by __mastering the fundamentals__ of computer vision:
+I __master the fundamentals__ of computer vision:
 
 * camera calibration
 * image processing algorithms
