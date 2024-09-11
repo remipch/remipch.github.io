@@ -37,6 +37,12 @@ TODO
 
 ![](images/world.png){width=1em height=1em} I can also work remotely
 
+### Education
+
+![](images/education.png){width=1em height=1em} __CentraleSupélec__ Engineering Degree (France, 2003)
+
+_Major in Computer, Systems and Networks_
+
 ## Open-source contributions
 
 ### ![](images/github.ico){width=1em height=1em} Github

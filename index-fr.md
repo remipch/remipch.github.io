@@ -37,6 +37,12 @@ TODO
 
 ![](images/world.png){width=1em height=1em} Je peux aussi travailler à distance
 
+### Formation
+
+![](images/education.png){width=1em height=1em} Diplôme d'Ingénieur __CentraleSupélec__ (France, 2003)
+
+_Spécialité Informatique, Systèmes et Réseaux_
+
 ## Contributions open-source
 
 ### ![](images/github.ico){width=1em height=1em} Github
