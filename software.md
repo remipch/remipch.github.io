@@ -10,7 +10,7 @@ The oldest have been running for over 15 years and are still providing __great v
 
 ## Technologies
 
-### Langages
+### Languages
 
 ![](images/cpp.png){width=1em height=1em} C/C++ &nbsp; &nbsp;
 ![](images/csharp.png){width=1em height=1em} C# &nbsp; &nbsp;

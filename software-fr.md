@@ -12,7 +12,7 @@ et continuent de rendre de fiers services à leurs utilisateurs.
 
 ## Technologies
 
-### Languages
+### Langages
 
 ![](images/cpp.png){width=1em height=1em} C/C++ &nbsp; &nbsp;
 ![](images/csharp.png){width=1em height=1em} C# &nbsp; &nbsp;
