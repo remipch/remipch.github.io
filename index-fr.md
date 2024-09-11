@@ -20,8 +20,8 @@ J'aime :
 
 ### CV (TODO)
 
-🇺🇸 [Anglais](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
-🇫🇷 [Français](Remi-PEUCHOT-fr.pdf)
+![](images/us.png){width=1em height=1em} [Anglais](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
+![](images/fr.png){width=1em height=1em} [Français](Remi-PEUCHOT-fr.pdf)
 
 ### Contact
 
@@ -32,7 +32,7 @@ J'aime :
 
 ![](images/location.png){width=1em height=1em} Puy-de-Dôme, France
 
-🌍 Je peux aussi travailler à distance
+![](images/world.png){width=1em height=1em} Je peux aussi travailler à distance
 
 ## Contributions open-source
 

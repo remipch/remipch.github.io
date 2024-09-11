@@ -20,8 +20,8 @@ I love:
 
 ### Resume (TODO)
 
-🇺🇸 [English](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
-🇫🇷 [French](Remi-PEUCHOT-fr.pdf)
+![](images/us.png){width=1em height=1em} [English](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
+![](images/fr.png){width=1em height=1em} [French](Remi-PEUCHOT-fr.pdf)
 
 ### Contact
 
@@ -32,7 +32,7 @@ I love:
 
 ![](images/location.png){width=1em height=1em} Puy-de-Dôme, France
 
-🌍 I can also work remotely
+![](images/world.png){width=1em height=1em} I can also work remotely
 
 ## Open-source contributions
 
