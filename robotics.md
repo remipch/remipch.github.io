@@ -46,7 +46,7 @@ to demonstrate innovative functionalities centered in urban areas:
 * __robot positioning__ through visual odometry
 * __trajectory control__ for accurate path navigation
 * communication between vehicles and the infrastructure
-* intelligent interaction with other users (pedestrians, cyclists, drivers, etc.)
+* intelligent interaction with other users (pedestrians, cyclists, drivers)
 * fleet management system for heterogeneous vehicles
 
 I used the existing robotics framework developed by the team in __C++ under ROS__

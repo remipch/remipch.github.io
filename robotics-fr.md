@@ -46,7 +46,7 @@ pour démontrer des fonctionnalités innovantes en milieu urbain :
 * __positionnement de robot__ par odométrie visuelle
 * __contrôle de trajectoire__ pour une navigation précise
 * communication entre les véhicules et l'infrastructure
-* interaction intelligente avec les autres usagers (piétons, cyclistes, automobilistes, etc.)
+* interaction intelligente avec les autres usagers (piétons, cyclistes, automobilistes)
 * système de gestion de flotte de véhicules hétérogènes
 
 Basée sur le framework robotique développé par l'équipe en __C++ sous ROS__,
