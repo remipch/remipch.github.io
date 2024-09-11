@@ -36,7 +36,33 @@
 
 <h1>Concentrateur solaire</h1>
 
-
+<p>En 2023 et 2024 j’ai conçu et réalisé un concentrateur solaire :</p>
+<ul>
+<li><a href="https://github.com/remipch/solar_concentrator/blob/master/mechanics/README.md">design mécanique</a> original</li>
+<li>développement d’une <a href="https://github.com/remipch/solar_concentrator/blob/master/electronics/README.md">carte électronique</a> spécifique</li>
+<li>logiciel embarqué sur un module <a href="https://www.gotronic.fr/art-module-esp32-cam-32630.htm">ESP32-CAM</a></li>
+</ul>
+<figure>
+<img src="images/solar_concentrator.png" alt="" /><figcaption>Panneau orientable (<a href="https://remipch.github.io/solar_concentrator/view_3d.html?model=solar_panel_assembled">cliquez ici</a> pour ouvrir le modèle 3D)</figcaption>
+</figure>
+<p>Ce projet est open-source et documenté en détail sur mon dépôt <a href="https://github.com/remipch/solar_concentrator">solar_concentrator</a>.</p>
+<p>Un des défis de ce projet était d’embarquer la totalité des algorithmes sur une carte microcontrôleur économique :</p>
+<ul>
+<li>Processeur : ESP32 à 240 MHz</li>
+<li>RAM : 520 Ko + 4 Mo (PSRAM)</li>
+<li>Capteur caméra : OV2640</li>
+<li>Prix : 12 €</li>
+</ul>
+<p>La totalité du code a pu être implémenté sur cette plateforme :</p>
+<ul>
+<li>logique haut niveau de l’application</li>
+<li>interface utilisateur (serveur http embarqué accessible par Wifi)</li>
+<li>acquisition et traitement d’images</li>
+<li>régulation et commande des moteurs</li>
+</ul>
+<figure>
+<img src="images/solar_concentrator.jpg" alt="" /><figcaption>Panneau orientable avec le superviseur</figcaption>
+</figure>
 
 </body>
 
