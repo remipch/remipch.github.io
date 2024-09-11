@@ -14,8 +14,7 @@ to the challenges of mobile robotics in open environments.
 I've been working on [Ecorobotix](https://ecorobotix.com/en/) machines:
 
 * AVO, an autonomous robot which offers smart and ultra-ecological spraying
-* ARA, an ultra-high precision sprayer which enables the ultra-targeted application of herbicides,
-fungicides, insecticides or fertilizers
+* ARA, an ultra-high precision sprayer
 
 I was in charge of specifying and implementing the __positioning software module__ for these machines.
 

@@ -13,8 +13,7 @@ pour résoudre les défis de la robotique mobile en milieu ouvert.
 J'ai travaillé sur les machines [Ecorobotix](https://ecorobotix.com/fr/) :
 
 * AVO, un robot autonome qui fournit un sprayage intelligent ultra-écologique
-* ARA, un sprayeur ultra-haute précision qui permet une application ultra-précise
-d'herbicide, de fongicides, d'insecticide et d'engrais
+* ARA, un sprayeur ultra-haute précision
 
 Ma mission consistait à spécifier et implémenter le __module de localisation__ de ces deux machines.
 
