@@ -18,10 +18,13 @@ J'aime :
 
 ## Info
 
-### CV (TODO)
+<!--
+TODO
 
-![](images/us.png){width=1em height=1em} [Anglais](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
-![](images/fr.png){width=1em height=1em} [Français](Remi-PEUCHOT-fr.pdf)
+### CV
+
+![](images/us.png){width=1em height=1em} [Anglais](Remi-PEUCHOT-en.pdf) (en cours de mise à jour) &nbsp; &nbsp;
+![](images/fr.png){width=1em height=1em} [Français](Remi-PEUCHOT-fr.pdf) (en cours de mise à jour)-->
 
 ### Contact
 

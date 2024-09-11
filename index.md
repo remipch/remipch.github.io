@@ -18,10 +18,13 @@ I love:
 
 ## Info
 
-### Resume (TODO)
+<!--
+TODO
+
+### Resume
 
 ![](images/us.png){width=1em height=1em} [English](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
-![](images/fr.png){width=1em height=1em} [French](Remi-PEUCHOT-fr.pdf)
+![](images/fr.png){width=1em height=1em} [French](Remi-PEUCHOT-fr.pdf)-->
 
 ### Contact
 
