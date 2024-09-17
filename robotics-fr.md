@@ -24,7 +24,6 @@ Le défi était de mettre au point un __algorithme de fusion de capteurs__ répo
 * traiter les __mesures manquantes ou erronées__
 * s'exécuter en embarqué sur la machine, en utilisant le moins de CPU possible
 * fournir une __prédiction temps réel__ (prédire la trajectoire future d'une plante détectée dans le passé)
-* avec une __précision de quelques centimètres__
 
 Non seulement mon travail à permis de __répondre à toutes ces contraintes__,
 mais il l'a surtout été d'une manière robuste et fiable :

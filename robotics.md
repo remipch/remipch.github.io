@@ -25,7 +25,6 @@ The challenge was to develop a __sensor fusion algorithm__ with the following ch
 * accepting __missing or erroneous__ sensor data
 * running embedded on the machine, using the lowest CPU resource possible
 * providing __real-time prediction estimation__ (predict the future trajectory of a plant detected in the past)
-* within a tolerance of a __few centimeters__
 
 Not only did my work __meet all these requirements__ but it did so in robust way:
 during my last year at Ecorobotix, __no bugs were reported__ related to this positioning software module.
