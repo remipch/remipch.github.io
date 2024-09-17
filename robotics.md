@@ -38,17 +38,15 @@ during my last year at Ecorobotix, __no bugs were reported__ related to this pos
 I've been working on project Tornado for
 [PerSyst](http://www.institutpascal.uca.fr/index.php/en/persyst) team at Institut Pascal.
 
-My mission was to adapt the EZ10 __autonomous shuttle__
-to demonstrate innovative functionalities centered in urban areas:
+Using the robotics framework developed in-house in __C++ under ROS__,
+my mission was to enhance the __EZ10 autonomous shuttle__
+to demonstrate innovative functionalities in an urban environment:
 
-* __robot positioning__ through visual odometry
-* __trajectory control__ for accurate path navigation
-* communication between vehicles and the infrastructure
-* intelligent interaction with other users (pedestrians, cyclists, drivers)
-* fleet management system for heterogeneous vehicles
-
-I used the existing robotics framework developed by the team in __C++ under ROS__
-and developed a user interface on top of it to meet the needs of this demonstrator.
+* integration of software and hardware modules supplied by project partners:
+    - communication between vehicles and infrastructure
+    - intelligent interaction with other users (pedestrians, cyclists)
+    - fleet management system for heterogeneous vehicles
+* development of a specific user interface
 
 ![EZ10 autonomous shuttle](images/ez10.jpg)
 

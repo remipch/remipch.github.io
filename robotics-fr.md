@@ -38,17 +38,15 @@ __aucun bug n'a été découvert__ sur ce module logiciel pendant ma dernière a
 J'ai contribué au projet Tornado pour l'équipe
 [PerSyst](http://www.institutpascal.uca.fr/index.php/fr/persyst) à Institut Pascal.
 
-Ma mission consistait à enrichir la __navette autonome__ EZ10
+En utilisant le framework robotique développé en interne en __C++ sous ROS__,
+ma mission consistait à enrichir la __navette autonome EZ10__
 pour démontrer des fonctionnalités innovantes en milieu urbain :
 
-* __positionnement de robot__ par odométrie visuelle
-* __contrôle de trajectoire__ pour une navigation précise
-* communication entre les véhicules et l'infrastructure
-* interaction intelligente avec les autres usagers (piétons, cyclistes, automobilistes)
-* système de gestion de flotte de véhicules hétérogènes
-
-Basée sur le framework robotique développé par l'équipe en __C++ sous ROS__,
-j'ai développé une interface utilisateur pour répondre aux besoins de ce démonstrateur.
+* intégration de modules logiciels ou materiels fournis par les partenaires du projet :
+    - communication entre les véhicules et l’infrastructure
+    - interaction intelligente avec les autres usagers (piétons, cyclistes)
+    - système de gestion de flotte de véhicules hétérogènes
+* développement d'une interface utilisateur spécifique
 
 ![Navette autonome EZ10](images/ez10.jpg)
 
