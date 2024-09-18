@@ -16,8 +16,6 @@ I love:
 * solving scientific and technical challenges
 * learning from interesting people
 
-## Info
-
 <!--
 TODO
 
@@ -42,24 +40,4 @@ TODO
 ![](images/education.png){width=1em height=1em} __CentraleSupélec__ Engineering Degree (France, 2003)
 
 _Major in Computer, Systems and Networks_
-
-## Open-source contributions
-
-### ![](images/github.ico){width=1em height=1em} Github
-
-Some of my projects are available on my Github repository [remipch](https://github.com/remipch).
-
-### ![](images/kde.ico){width=1em height=1em} KDE
-
-Because it's light, fast and customizable, [Kate](https://kate-editor.org/) is my favorite editor.
-
-I contribute with my KDE profile [remipch](https://invent.kde.org/remipch).
-
-### ![](images/openstreetmap.ico){width=1em height=1em} OpenStreetMap
-
-I use [OrganicMaps](https://organicmaps.app/) as my daily GPS application (for driving and hiking).
-
-I try to fix [OpenStreetMap](https://www.openstreetmap.org/) whenever I encounter an incorrect data in real life,
-my OpenStreetMap profile is [remipch](https://www.openstreetmap.org/user/remipch).
-
 

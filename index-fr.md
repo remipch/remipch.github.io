@@ -16,8 +16,6 @@ J'aime :
 * résoudre des défis techniques et scientifiques
 * apprendre et m'inspirer de personnes passionnantes
 
-## Info
-
 <!--
 TODO
 
@@ -42,22 +40,3 @@ TODO
 ![](images/education.png){width=1em height=1em} Diplôme d'Ingénieur __CentraleSupélec__ (France, 2003)
 
 _Spécialité Informatique, Systèmes et Réseaux_
-
-## Contributions open-source
-
-### ![](images/github.ico){width=1em height=1em} Github
-
-Mes projets personnels sont disponibles sur mon dépôt Github [remipch](https://github.com/remipch).
-
-### ![](images/kde.ico){width=1em height=1em} KDE
-
-Parce qu'il est rapide, léger et personnalisable, [Kate](https://kate-editor.org/) est mon éditeur favori.
-
-Je contribue occasionnellement à son développement, mon profil KDE est [remipch](https://invent.kde.org/remipch).
-
-### ![](images/openstreetmap.ico){width=1em height=1em} OpenStreetMap
-
-J'utilise [OrganicMaps](https://organicmaps.app/) comme application de GPS (sur route et en randonnée).
-
-J'essaie d'améliorer [OpenStreetMap](https://www.openstreetmap.org/) dès que je rencontre une erreur ou un manque dans les données,
-mon profil OpenStreetMap est [remipch](https://www.openstreetmap.org/user/remipch).

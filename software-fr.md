@@ -86,3 +86,22 @@ je maîtrise les compétences nécessaires pour produire du code de haute qualit
 * créer ou refactorer le code pour le rendre __simple, lisible et maintenable__
 * identifier les limitations de performance et apporter les __optimisations appropriées__
 * créer ou adapter les tests pour assurer la fiabilité du code
+
+## Contributions open-source
+
+### ![](images/github.ico){width=1em height=1em} Github
+
+Mes projets personnels sont disponibles sur mon dépôt Github [remipch](https://github.com/remipch).
+
+### ![](images/kde.ico){width=1em height=1em} KDE
+
+Parce qu'il est rapide, léger et personnalisable, [Kate](https://kate-editor.org/) est mon éditeur favori.
+
+Je contribue occasionnellement à son développement, mon profil KDE est [remipch](https://invent.kde.org/remipch).
+
+### ![](images/openstreetmap.ico){width=1em height=1em} OpenStreetMap
+
+J'utilise [OrganicMaps](https://organicmaps.app/) comme application de GPS (sur route et en randonnée).
+
+J'essaie d'améliorer [OpenStreetMap](https://www.openstreetmap.org/) dès que je rencontre une erreur ou un manque dans les données,
+mon profil OpenStreetMap est [remipch](https://www.openstreetmap.org/user/remipch).
