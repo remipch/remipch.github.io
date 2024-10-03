@@ -21,7 +21,7 @@ TODO
 
 ### Resume
 
-![](images/us.png){width=1em height=1em} [English](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
+![](images/en-us.png){width=1em height=1em} [English](Remi-PEUCHOT-en.pdf) &nbsp; &nbsp;
 ![](images/fr.png){width=1em height=1em} [French](Remi-PEUCHOT-fr.pdf)-->
 
 ### Contact
