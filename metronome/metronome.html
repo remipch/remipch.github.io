@@ -191,18 +191,35 @@ function showTime(ms) {
   $('beats').classList.toggle('late', remaining < 0);
 }
 
-// Tambour grave : sinusoïde dont la fréquence chute rapidement, puis s'éteint
+// Clic sourd : bruit filtré passe-bas (coupure ~400 Hz), attaque de 3 ms, extinction en 5 ms.
+// 50 ms suffisent : au-delà, le son est à plus de 80 dB sous son maximum. Volume normalisé à 0,5.
+// Calculé une seule fois dans un buffer : chaque clic est identique, même programmé en retard
+// (avec un oscillateur et des rampes, un clic en retard perd son attaque).
+let drumBuffer = null;
+function makeDrum() {
+  const rate = audio.sampleRate;
+  const length = Math.round(0.05 * rate);
+  const buffer = audio.createBuffer(1, length, rate);
+  const data = buffer.getChannelData(0);
+  let noise = 0;
+  let peak = 0;
+  for (let i = 0; i < length; i++) {
+    const t = i / rate;
+    noise += 0.05 * ((Math.random() * 2 - 1) - noise);   // passe-bas : clic sourd
+    data[i] = Math.min(1, t / 0.003) * noise * Math.exp(-t / 0.005);
+    peak = Math.max(peak, Math.abs(data[i]));
+  }
+  for (let i = 0; i < length; i++) data[i] *= 0.5 / peak;
+  return buffer;
+}
+
 function drum(time) {
-  const osc = audio.createOscillator();
-  const gain = audio.createGain();
-  osc.frequency.setValueAtTime(160, time);
-  osc.frequency.exponentialRampToValueAtTime(55, time + 0.12);
-  gain.gain.setValueAtTime(1, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
-  osc.connect(gain).connect(audio.destination);
-  osc.start(time);
-  osc.stop(time + 0.35);
-  return osc;
+  if (!drumBuffer) drumBuffer = makeDrum();
+  const source = audio.createBufferSource();
+  source.buffer = drumBuffer;
+  source.connect(audio.destination);
+  source.start(time);
+  return source;
 }
 
 function playSample(time) {
@@ -303,11 +320,12 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
+// Écran toujours allumé tant que la page est affichée, que le métronome tourne ou non
 async function requestWakeLock() {
+  if (wakeLock || document.visibilityState !== 'visible') return;
   try {
-    const lock = await navigator.wakeLock.request('screen');
-    if (running) wakeLock = lock;
-    else lock.release();
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.onrelease = () => { wakeLock = null; };
   } catch (e) {
     // API absente ou refusée : le métronome fonctionne quand même
   }
@@ -330,7 +348,6 @@ function start() {
   startedAt = performance.now();
   schedule();
   scheduler = setInterval(schedule, 25);
-  requestWakeLock();
   updateButtons();
   requestAnimationFrame(draw);
 }
@@ -346,8 +363,6 @@ function pause() {
   showTime(elapsed);
   $('top').classList.remove('on');
   $('bottom').classList.remove('on');
-  if (wakeLock) wakeLock.release();
-  wakeLock = null;
   updateButtons();
 }
 
@@ -388,10 +403,11 @@ $('reset').onclick = () => {
   updateButtons();
 };
 
-// Le wake lock est relâché automatiquement quand la page passe en arrière-plan
-document.addEventListener('visibilitychange', () => {
-  if (running && document.visibilityState === 'visible') requestWakeLock();
-});
+// Le wake lock est relâché automatiquement quand la page passe en arrière-plan : on le redemande
+// au retour, et au premier appui au cas où le navigateur l'aurait refusé sans action de l'utilisateur
+document.addEventListener('visibilitychange', requestWakeLock);
+document.addEventListener('pointerdown', requestWakeLock);
+requestWakeLock();
 
 try {
   setBpm(Number(localStorage.getItem('tempo')) || bpm);
