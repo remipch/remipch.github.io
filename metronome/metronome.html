@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Métronome</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  [hidden] { display: none !important; }   /* sinon .row (display: flex) l'emporte */
+  body {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    padding: 3vh 4vw;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 9vw;
+    background: #fff;
+    color: #000;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .row { display: flex; justify-content: space-between; align-items: center; }
+  .small { font-size: 5vw; }
+  .small button { min-width: 14vw; min-height: 10vw; }
+  #soundName { flex: 1; min-width: 0; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  button {
+    font: inherit;
+    color: inherit;
+    background: #eee;
+    border: 0.8vw solid #000;
+    border-radius: 3vw;
+    min-width: 20vw;
+    min-height: 14vw;
+  }
+  button:active:not(:disabled) { background: #000; color: #fff; }
+  button svg { display: block; width: 1em; height: 1em; margin: auto; }
+  button:disabled { opacity: 0.3; }
+  input[type=range]:disabled { opacity: 0.3; }
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 14vw;
+    background: none;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    box-sizing: border-box;
+    height: 6vw;
+    border: 0.8vw solid #000;
+    border-radius: 3vw;
+    background: #fff;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12vw;
+    height: 12vw;
+    margin-top: -3.8vw;   /* centre le curseur : (6 - 2 * 0.8 - 12) / 2 */
+    border-radius: 50%;
+    background: #000;
+  }
+  input[type=range]::-moz-range-track {
+    box-sizing: border-box;
+    height: 6vw;
+    border: 0.8vw solid #000;
+    border-radius: 3vw;
+    background: #fff;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 12vw;
+    height: 12vw;
+    border: none;
+    border-radius: 50%;
+    background: #000;
+  }
+  #time { padding: 0 2vw; border-radius: 2vw; }
+  #time.late { background: #d00; color: #fff; }
+  #beats { flex: 1; display: flex; flex-direction: column; gap: 3vh; }
+  #beats div { flex: 1; border: 1vw solid #000; }
+  #beats .on { background: #000; }
+  #beats.late .on { background: #d00; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <button id="minus">&minus;</button>
+    <span id="bpm"></span>
+    <button id="plus">+</button>
+  </div>
+  <input id="slider" type="range" min="60" max="300" step="1">
+  <div class="row">
+    <button id="reset">&times;</button>
+    <span id="time"></span>
+    <button id="startPause"></button>
+  </div>
+  <input id="duration" type="range" min="5" max="1800" step="5">
+  <div id="beats">
+    <div id="top"></div>
+    <div id="bottom"></div>
+  </div>
+  <div class="row small">
+    <button id="delayMinus">&minus;</button>
+    <span>décalage <span id="delay"></span> ms</span>
+    <button id="delayPlus">+</button>
+  </div>
+  <!-- Choix du son : masqué pour l'instant, code conservé pour plus tard -->
+  <div class="row small" hidden>
+    <button id="soundDefault">&times;</button>
+    <span id="soundName">tambour</span>
+    <button id="soundFile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="9" cy="18" rx="4" ry="3" transform="rotate(-20 9 18)" fill="currentColor" stroke="none"/>
+        <path d="M12.5 17 V4 C13 7 18 8 17 13"/>
+      </svg>
+    </button>
+    <input id="file" type="file" accept="audio/*" hidden>
+  </div>
+
+<script>
+const MIN_BPM = 60;
+const MAX_BPM = 300;
+const MIN_DURATION = 5;         // s : durée du décompte réglable au slider
+const MAX_DURATION = 30 * 60;   // s
+const DURATION_STEP = 5;        // s
+// Retard d'affichage des rectangles par rapport au son, réglé à la main
+// (les délais annoncés par les navigateurs Android ne sont pas fiables)
+const DELAY_STEP = 10;   // ms
+const MAX_DELAY = 1000;  // ms
+const LOOKAHEAD = 0.1;   // secondes de clics programmés à l'avance
+const PLAY_ICON = '\u25B6\uFE0E';   // ▶ forcé en texte (pas en emoji)
+const PAUSE_ICON = '\u275A\u275A';  // ❚❚
+
+const $ = id => document.getElementById(id);
+
+let bpm = 205;          // tempo par défaut, remplacé par le dernier tempo mémorisé
+let running = false;
+let audio = null;       // AudioContext, créé au premier start
+let scheduler = null;
+let nextBeatTime = 0;
+let beatCount = 0;
+let beats = [];         // temps programmés : { time, n, source }
+let duration = 10 * 60; // s : durée du décompte, remplacée par la dernière durée mémorisée
+let elapsed = 0;        // ms cumulées des sessions précédentes
+let startedAt = 0;      // performance.now() du dernier start
+let wakeLock = null;
+let clockOffset = null; // s : écart lissé entre horloge audio et performance.now()
+let delay = 0;          // ms, mémorisé dans le navigateur
+let sample = null;      // AudioBuffer du fichier son choisi, sinon tambour
+let sampleStart = 0;    // s : blanc à sauter au début du fichier
+
+function setBpm(value) {
+  bpm = Math.min(MAX_BPM, Math.max(MIN_BPM, value));
+  $('bpm').textContent = bpm;
+  $('slider').value = bpm;
+  try { localStorage.setItem('tempo', bpm); } catch (e) {}
+}
+
+function setDelay(value) {
+  delay = Math.min(MAX_DELAY, Math.max(0, value));
+  $('delay').textContent = delay;
+  try { localStorage.setItem('decalage', delay); } catch (e) {}
+}
+
+function setDuration(value) {
+  duration = Math.min(MAX_DURATION, Math.max(MIN_DURATION, value));
+  $('duration').value = duration;
+  try { localStorage.setItem('duree', duration); } catch (e) {}
+}
+
+// Arrondi à la seconde inférieure : -0:01 dès qu'on passe sous 0
+function formatTime(ms) {
+  const signed = Math.floor(ms / 1000);
+  const sign = signed < 0 ? '-' : '';
+  const total = Math.abs(signed);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor(total / 60) % 60;
+  const s = total % 60;
+  const pad = n => String(n).padStart(2, '0');
+  return sign + (h ? h + ':' + pad(m) + ':' + pad(s) : m + ':' + pad(s));
+}
+
+// ms = temps écoulé ; affiche le temps restant, en rouge une fois passé sous 0
+function showTime(ms) {
+  const remaining = duration * 1000 - ms;
+  $('time').textContent = formatTime(remaining);
+  $('time').classList.toggle('late', remaining < 0);
+  $('beats').classList.toggle('late', remaining < 0);
+}
+
+// Tambour grave : sinusoïde dont la fréquence chute rapidement, puis s'éteint
+function drum(time) {
+  const osc = audio.createOscillator();
+  const gain = audio.createGain();
+  osc.frequency.setValueAtTime(160, time);
+  osc.frequency.exponentialRampToValueAtTime(55, time + 0.12);
+  gain.gain.setValueAtTime(1, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
+  osc.connect(gain).connect(audio.destination);
+  osc.start(time);
+  osc.stop(time + 0.35);
+  return osc;
+}
+
+function playSample(time) {
+  const source = audio.createBufferSource();
+  source.buffer = sample;
+  source.connect(audio.destination);
+  source.start(time, sampleStart);   // saute le blanc du début
+  return source;
+}
+
+async function setSound(file) {
+  if (!audio) audio = new AudioContext();
+  const buffer = await audio.decodeAudioData(await file.arrayBuffer());
+  sampleStart = findSoundStart(buffer);
+  sample = buffer;
+  $('soundName').textContent = file.name
+    + (sampleStart >= 0.001 ? ' (-' + Math.round(sampleStart * 1000) + ' ms)' : '');
+  updateButtons();
+}
+
+// Fichier son mémorisé dans le navigateur (IndexedDB : localStorage ne stocke que du texte)
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('metronome', 1);
+    request.onupgradeneeded = () => request.result.createObjectStore('files');
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function saveSound(file) {   // file = null pour effacer
+  const db = await openDb();
+  const tx = db.transaction('files', 'readwrite');
+  if (file) tx.objectStore('files').put(file, 'sound');
+  else tx.objectStore('files').delete('sound');
+  return new Promise((resolve, reject) => {
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function loadSavedSound() {
+  const db = await openDb();
+  const request = db.transaction('files').objectStore('files').get('sound');
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Début du son dans le fichier (s) : premier échantillon dépassant 5 % du niveau maximal
+function findSoundStart(buffer) {
+  const channels = [];
+  for (let c = 0; c < buffer.numberOfChannels; c++) channels.push(buffer.getChannelData(c));
+  let peak = 0;
+  for (const data of channels) {
+    for (let i = 0; i < data.length; i++) peak = Math.max(peak, Math.abs(data[i]));
+  }
+  let first = buffer.length;
+  for (const data of channels) {
+    for (let i = 0; i < first; i++) {
+      if (Math.abs(data[i]) > peak * 0.05) { first = i; break; }
+    }
+  }
+  return first < buffer.length ? first / buffer.sampleRate : 0;
+}
+
+function schedule() {
+  while (nextBeatTime < audio.currentTime + LOOKAHEAD) {
+    const source = sample ? playSample(nextBeatTime) : drum(nextBeatTime);
+    beats.push({ time: nextBeatTime, n: beatCount++, source });
+    nextBeatTime += 60 / bpm;
+  }
+}
+
+// Sur Android, audio.currentTime avance par bonds irréguliers : on le lisse avec
+// performance.now(), qui avance en continu, en suivant la moyenne de l'écart entre
+// les deux horloges sur quelques secondes (moyenne glissante exponentielle).
+function smoothAudioTime() {
+  const perf = performance.now() / 1000;
+  if (audio.state === 'running' && audio.currentTime > 0) {
+    const sample = audio.currentTime - perf;
+    clockOffset = clockOffset === null ? sample : clockOffset + 0.005 * (sample - clockOffset);
+  }
+  return clockOffset === null ? audio.currentTime : perf + clockOffset;
+}
+
+function draw() {
+  if (!running) return;
+  const now = smoothAudioTime() - delay / 1000;
+  while (beats.length > 1 && beats[1].time <= now) beats.shift();
+  const beat = beats[0];
+  const lit = beat.time <= now;
+  // Premier temps (n = 0) en bas, puis alternance
+  $('bottom').classList.toggle('on', lit && beat.n % 2 === 0);
+  $('top').classList.toggle('on', lit && beat.n % 2 === 1);
+  showTime(elapsed + performance.now() - startedAt);
+  requestAnimationFrame(draw);
+}
+
+async function requestWakeLock() {
+  try {
+    const lock = await navigator.wakeLock.request('screen');
+    if (running) wakeLock = lock;
+    else lock.release();
+  } catch (e) {
+    // API absente ou refusée : le métronome fonctionne quand même
+  }
+}
+
+function updateButtons() {
+  $('startPause').textContent = running ? PAUSE_ICON : PLAY_ICON;
+  $('reset').disabled = running || elapsed === 0;   // déjà à la durée réglée
+  $('duration').disabled = running;
+  $('soundDefault').disabled = !sample;
+}
+
+function start() {
+  if (!audio) audio = new AudioContext();
+  audio.resume();
+  nextBeatTime = audio.currentTime + 0.05;
+  beatCount = 0;
+  beats = [];
+  running = true;
+  startedAt = performance.now();
+  schedule();
+  scheduler = setInterval(schedule, 25);
+  requestWakeLock();
+  updateButtons();
+  requestAnimationFrame(draw);
+}
+
+function pause() {
+  running = false;
+  clearInterval(scheduler);
+  // Annule les clics programmés pas encore commencés ; le son en cours va jusqu'au bout
+  for (const beat of beats) {
+    if (beat.time > audio.currentTime) beat.source.stop();
+  }
+  elapsed += performance.now() - startedAt;
+  showTime(elapsed);
+  $('top').classList.remove('on');
+  $('bottom').classList.remove('on');
+  if (wakeLock) wakeLock.release();
+  wakeLock = null;
+  updateButtons();
+}
+
+$('minus').onclick = () => setBpm(bpm - 1);
+$('plus').onclick = () => setBpm(bpm + 1);
+$('slider').oninput = e => setBpm(Number(e.target.value));
+$('duration').oninput = e => {
+  setDuration(Number(e.target.value));
+  elapsed = 0;   // le décompte repart de la nouvelle durée
+  showTime(0);
+  updateButtons();
+};
+$('delayMinus').onclick = () => setDelay(delay - DELAY_STEP);
+$('delayPlus').onclick = () => setDelay(delay + DELAY_STEP);
+$('soundFile').onclick = () => $('file').click();
+$('file').onchange = async e => {
+  const file = e.target.files[0];
+  e.target.value = '';   // permet de rechoisir le même fichier
+  if (!file) return;
+  try {
+    await setSound(file);
+  } catch (err) {
+    alert('Fichier son illisible : ' + file.name);
+    return;
+  }
+  saveSound(file).catch(() => {});   // échec de sauvegarde : le son marche quand même
+};
+$('soundDefault').onclick = () => {
+  sample = null;
+  $('soundName').textContent = 'tambour';
+  updateButtons();
+  saveSound(null).catch(() => {});
+};
+$('startPause').onclick = () => running ? pause() : start();
+$('reset').onclick = () => {
+  elapsed = 0;
+  showTime(0);
+  updateButtons();
+};
+
+// Le wake lock est relâché automatiquement quand la page passe en arrière-plan
+document.addEventListener('visibilitychange', () => {
+  if (running && document.visibilityState === 'visible') requestWakeLock();
+});
+
+try {
+  setBpm(Number(localStorage.getItem('tempo')) || bpm);
+  setDelay(Number(localStorage.getItem('decalage')) || 0);
+  setDuration(Number(localStorage.getItem('duree')) || duration);
+} catch (e) {
+  setBpm(bpm);
+  setDelay(0);
+  setDuration(duration);
+}
+showTime(0);
+updateButtons();
+// Choix du son masqué : on ne recharge pas un fichier mémorisé, qu'on ne pourrait plus enlever
+// loadSavedSound().then(file => file && setSound(file)).catch(() => {});
+</script>
+</body>
+</html>
