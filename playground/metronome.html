@@ -4,79 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <title>Métronome</title>
+<link rel="stylesheet" href="commun.css">
 <style>
-  * { box-sizing: border-box; margin: 0; }
-  [hidden] { display: none !important; }   /* sinon .row (display: flex) l'emporte */
-  body {
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 3vh;
-    padding: 3vh 4vw;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 9vw;
-    background: #fff;
-    color: #000;
-    touch-action: manipulation;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  .row { display: flex; justify-content: space-between; align-items: center; }
-  .small { font-size: 5vw; }
-  .small button { min-width: 14vw; min-height: 10vw; }
   #soundName { flex: 1; min-width: 0; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  button {
-    font: inherit;
-    color: inherit;
-    background: #eee;
-    border: 0.8vw solid #000;
-    border-radius: 3vw;
-    min-width: 20vw;
-    min-height: 14vw;
-  }
-  button:active:not(:disabled) { background: #000; color: #fff; }
-  button svg { display: block; width: 1em; height: 1em; margin: auto; }
-  button:disabled { opacity: 0.3; }
-  input[type=range]:disabled { opacity: 0.3; }
-  input[type=range] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 14vw;
-    background: none;
-  }
-  input[type=range]::-webkit-slider-runnable-track {
-    box-sizing: border-box;
-    height: 6vw;
-    border: 0.8vw solid #000;
-    border-radius: 3vw;
-    background: #fff;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 12vw;
-    height: 12vw;
-    margin-top: -3.8vw;   /* centre le curseur : (6 - 2 * 0.8 - 12) / 2 */
-    border-radius: 50%;
-    background: #000;
-  }
-  input[type=range]::-moz-range-track {
-    box-sizing: border-box;
-    height: 6vw;
-    border: 0.8vw solid #000;
-    border-radius: 3vw;
-    background: #fff;
-  }
-  input[type=range]::-moz-range-thumb {
-    width: 12vw;
-    height: 12vw;
-    border: none;
-    border-radius: 50%;
-    background: #000;
-  }
   #time { padding: 0 2vw; border-radius: 2vw; }
   #time.late { background: #d00; color: #fff; }
   #beats { flex: 1; display: flex; flex-direction: column; gap: 3vh; }
@@ -120,6 +50,7 @@
     <input id="file" type="file" accept="audio/*" hidden>
   </div>
 
+<script src="commun.js"></script>
 <script>
 const MIN_BPM = 60;
 const MAX_BPM = 300;
@@ -131,10 +62,6 @@ const DURATION_STEP = 5;        // s
 const DELAY_STEP = 10;   // ms
 const MAX_DELAY = 1000;  // ms
 const LOOKAHEAD = 0.1;   // secondes de clics programmés à l'avance
-const PLAY_ICON = '\u25B6\uFE0E';   // ▶ forcé en texte (pas en emoji)
-const PAUSE_ICON = '\u275A\u275A';  // ❚❚
-
-const $ = id => document.getElementById(id);
 
 let bpm = 205;          // tempo par défaut, remplacé par le dernier tempo mémorisé
 let running = false;
@@ -146,7 +73,6 @@ let beats = [];         // temps programmés : { time, n, source }
 let duration = 10 * 60; // s : durée du décompte, remplacée par la dernière durée mémorisée
 let elapsed = 0;        // ms cumulées des sessions précédentes
 let startedAt = 0;      // performance.now() du dernier start
-let wakeLock = null;
 let clockOffset = null; // s : écart lissé entre horloge audio et performance.now()
 let delay = 0;          // ms, mémorisé dans le navigateur
 let sample = null;      // AudioBuffer du fichier son choisi, sinon tambour
@@ -156,19 +82,19 @@ function setBpm(value) {
   bpm = Math.min(MAX_BPM, Math.max(MIN_BPM, value));
   $('bpm').textContent = bpm;
   $('slider').value = bpm;
-  try { localStorage.setItem('tempo', bpm); } catch (e) {}
+  saveNumber('tempo', bpm);
 }
 
 function setDelay(value) {
   delay = Math.min(MAX_DELAY, Math.max(0, value));
   $('delay').textContent = delay;
-  try { localStorage.setItem('decalage', delay); } catch (e) {}
+  saveNumber('decalage', delay);
 }
 
 function setDuration(value) {
   duration = Math.min(MAX_DURATION, Math.max(MIN_DURATION, value));
   $('duration').value = duration;
-  try { localStorage.setItem('duree', duration); } catch (e) {}
+  saveNumber('duree', duration);
 }
 
 // Arrondi à la seconde inférieure : -0:01 dès qu'on passe sous 0
@@ -240,35 +166,6 @@ async function setSound(file) {
   updateButtons();
 }
 
-// Fichier son mémorisé dans le navigateur (IndexedDB : localStorage ne stocke que du texte)
-function openDb() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open('metronome', 1);
-    request.onupgradeneeded = () => request.result.createObjectStore('files');
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-}
-
-async function saveSound(file) {   // file = null pour effacer
-  const db = await openDb();
-  const tx = db.transaction('files', 'readwrite');
-  if (file) tx.objectStore('files').put(file, 'sound');
-  else tx.objectStore('files').delete('sound');
-  return new Promise((resolve, reject) => {
-    tx.oncomplete = resolve;
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-async function loadSavedSound() {
-  const db = await openDb();
-  const request = db.transaction('files').objectStore('files').get('sound');
-  return new Promise((resolve, reject) => {
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-}
 
 // Début du son dans le fichier (s) : premier échantillon dépassant 5 % du niveau maximal
 function findSoundStart(buffer) {
@@ -301,8 +198,8 @@ function schedule() {
 function smoothAudioTime() {
   const perf = performance.now() / 1000;
   if (audio.state === 'running' && audio.currentTime > 0) {
-    const sample = audio.currentTime - perf;
-    clockOffset = clockOffset === null ? sample : clockOffset + 0.005 * (sample - clockOffset);
+    const offset = audio.currentTime - perf;
+    clockOffset = clockOffset === null ? offset : clockOffset + 0.005 * (offset - clockOffset);
   }
   return clockOffset === null ? audio.currentTime : perf + clockOffset;
 }
@@ -318,17 +215,6 @@ function draw() {
   $('top').classList.toggle('on', lit && beat.n % 2 === 1);
   showTime(elapsed + performance.now() - startedAt);
   requestAnimationFrame(draw);
-}
-
-// Écran toujours allumé tant que la page est affichée, que le métronome tourne ou non
-async function requestWakeLock() {
-  if (wakeLock || document.visibilityState !== 'visible') return;
-  try {
-    wakeLock = await navigator.wakeLock.request('screen');
-    wakeLock.onrelease = () => { wakeLock = null; };
-  } catch (e) {
-    // API absente ou refusée : le métronome fonctionne quand même
-  }
 }
 
 function updateButtons() {
@@ -388,13 +274,14 @@ $('file').onchange = async e => {
     alert('Fichier son illisible : ' + file.name);
     return;
   }
-  saveSound(file).catch(() => {});   // échec de sauvegarde : le son marche quand même
+  // Mémorisé dans le navigateur ; échec de sauvegarde : le son marche quand même
+  saveValue('metronome', 'files', 'sound', file).catch(() => {});
 };
 $('soundDefault').onclick = () => {
   sample = null;
   $('soundName').textContent = 'tambour';
   updateButtons();
-  saveSound(null).catch(() => {});
+  saveValue('metronome', 'files', 'sound', null).catch(() => {});
 };
 $('startPause').onclick = () => running ? pause() : start();
 $('reset').onclick = () => {
@@ -403,25 +290,13 @@ $('reset').onclick = () => {
   updateButtons();
 };
 
-// Le wake lock est relâché automatiquement quand la page passe en arrière-plan : on le redemande
-// au retour, et au premier appui au cas où le navigateur l'aurait refusé sans action de l'utilisateur
-document.addEventListener('visibilitychange', requestWakeLock);
-document.addEventListener('pointerdown', requestWakeLock);
-requestWakeLock();
-
-try {
-  setBpm(Number(localStorage.getItem('tempo')) || bpm);
-  setDelay(Number(localStorage.getItem('decalage')) || 0);
-  setDuration(Number(localStorage.getItem('duree')) || duration);
-} catch (e) {
-  setBpm(bpm);
-  setDelay(0);
-  setDuration(duration);
-}
+setBpm(loadNumber('tempo', bpm));
+setDelay(loadNumber('decalage', 0));
+setDuration(loadNumber('duree', duration));
 showTime(0);
 updateButtons();
 // Choix du son masqué : on ne recharge pas un fichier mémorisé, qu'on ne pourrait plus enlever
-// loadSavedSound().then(file => file && setSound(file)).catch(() => {});
+// loadValue('metronome', 'files', 'sound').then(file => file && setSound(file)).catch(() => {});
 </script>
 </body>
 </html>
