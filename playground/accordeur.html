@@ -762,11 +762,24 @@ function tapTone(e, note, recorded) {
   return { cutoff, level: (recorded ? 0.5 : 0.3) * loss };
 }
 
+// Timbre suivant le doigt : changements doux, et ignorés s'ils sont minimes (chaque petit
+// mouvement du doigt ne doit pas faire grésiller le son)
 function setTapTone(tap, e) {
   const { cutoff, level } = tapTone(e, tap.note, tap.recorded);
+  if (Math.abs(cutoff / tap.cutoff - 1) < 0.03) return;
+  tap.cutoff = cutoff;
   const now = audio.currentTime;
-  for (const filter of tap.filters) filter.frequency.setTargetAtTime(cutoff, now, 0.02);
-  tap.gain.gain.setTargetAtTime(level, now, 0.02);
+  for (const filter of tap.filters) filter.frequency.setTargetAtTime(cutoff, now, 0.05);
+  tap.gain.gain.setTargetAtTime(level, now, 0.05);
+}
+
+// Extinction sans clic : le volume est figé à sa valeur du moment avant de descendre (annuler les
+// changements en cours peut sinon le faire sauter à une ancienne valeur)
+function fadeOut(param, now, tau) {
+  const value = param.value;
+  param.cancelScheduledValues(now);
+  param.setValueAtTime(value, now);
+  param.setTargetAtTime(0, now, tau);
 }
 
 // Note la plus proche du doigt sur la courbe : une note marquée (de la gamme), ou n'importe quel
@@ -804,8 +817,8 @@ function startTap(e) {
   }
   const now = audio.currentTime;
   const recorded = lastPlay === 'take' && take;
-  const tap = { note, recorded };
   const { cutoff, level } = tapTone(e, note, recorded);
+  const tap = { note, recorded, cutoff };
   tap.gain = audio.createGain();
   tap.gain.connect(tapBus);
   tap.gain.gain.setValueAtTime(0, now);
@@ -847,18 +860,16 @@ function stopTap(e) {
   const tap = taps.get(e.pointerId);
   if (!tap) return;
   const now = audio.currentTime;
-  tap.gain.gain.cancelScheduledValues(now);
-  tap.gain.gain.setTargetAtTime(0, now, 0.03);   // extinction courte, sans clic
-  tap.sound.stop(now + 0.3);
+  fadeOut(tap.gain.gain, now, 0.04);   // extinction courte, sans clic
+  tap.sound.stop(now + 0.4);
   taps.delete(e.pointerId);
   drawCurve();
 }
 
 function stopSound() {
   const now = audio.currentTime;
-  gain.gain.cancelScheduledValues(now);
-  gain.gain.setTargetAtTime(0, now, 0.02);     // extinction courte, sans clic
-  (osc || source).stop(now + 0.2);
+  fadeOut(gain.gain, now, 0.03);   // extinction courte, sans clic
+  (osc || source).stop(now + 0.3);
   osc = null;
   source = null;
 }
