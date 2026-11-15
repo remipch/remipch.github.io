@@ -138,7 +138,7 @@ let osc = null;             // note de référence synthétisée en cours
 let source = null;          // enregistrement en cours de lecture
 let gain = null;
 let taps = new Map();       // notes jouées par les doigts posés sur la courbe : pointerId → { sound, filters, gain, note, recorded }
-let tapBus = null;          // volume commun des notes jouées sur la courbe
+let tapBus = null;          // sortie commune des notes jouées sur la courbe (limiteur)
 
 function noteName(note) {
   return NAMES[note % 12] + ' ' + (Math.floor(note / 12) - 2);
@@ -242,8 +242,9 @@ function drawCurve() {
   ctx.textBaseline = 'middle';
   // En gamme : notes de la gamme sur toute la largeur, notes altérées dans la bande de gauche
   // seulement, entre les noms des notes (pour les jouer d'un appui)
+  const tapped = new Set(Array.from(taps.values(), tap => tap.note));
   for (let note = center - CURVE_RANGE; note <= center + CURVE_RANGE; note++) {
-    ctx.fillStyle = '#cfc';
+    ctx.fillStyle = tapped.has(note) ? '#0a0' : '#cfc';   // note jouée d'un appui : vert foncé
     const top = y(note + IN_TUNE / 100);
     const height = 2 * IN_TUNE / 100 * step;
     if (!marked(note)) {
@@ -757,7 +758,8 @@ function tapTone(e, note, recorded) {
   const x = Math.min(1, Math.max(0, e.offsetX / $('curve').clientWidth));
   const cutoff = noteFreq(note) * Math.pow(HARMONICS, 1 - x);   // progression régulière à l'oreille
   const loss = 1 + Math.pow(noteFreq(note) / cutoff, 4);   // atténuation de la fondamentale
-  return { cutoff, level: (recorded ? 1 : 0.5) * loss };
+  // Volume d'une note : assez bas pour que trois notes ensemble ne saturent pas
+  return { cutoff, level: (recorded ? 0.5 : 0.3) * loss };
 }
 
 function setTapTone(tap, e) {
@@ -790,7 +792,14 @@ function startTap(e) {
   wakeAudio();
   stopTap(e);
   if (!tapBus) {
-    tapBus = audio.createGain();
+    // Limiteur de sécurité : chaque note garde son volume ; il n'agit que si quatre notes ou plus
+    // ensemble approchent la saturation
+    tapBus = audio.createDynamicsCompressor();
+    tapBus.threshold.value = -1;   // dB : n'agit qu'au-delà de trois notes environ
+    tapBus.knee.value = 0;
+    tapBus.ratio.value = 20;
+    tapBus.attack.value = 0.001;
+    tapBus.release.value = 0.25;   // retour lent : pas de variations de volume qui craquent
     tapBus.connect(audio.destination);
   }
   const now = audio.currentTime;
@@ -818,7 +827,7 @@ function startTap(e) {
   tap.sound.connect(tap.filters[0]);
   tap.sound.start(now);
   taps.set(e.pointerId, tap);
-  balanceTaps();
+  drawCurve();
 }
 
 function moveTap(e) {
@@ -829,6 +838,7 @@ function moveTap(e) {
     if (tap.sound.frequency) tap.sound.frequency.setTargetAtTime(noteFreq(note), audio.currentTime, 0.01);
     else tap.sound.playbackRate.setTargetAtTime(noteFreq(note) / take.freq, audio.currentTime, 0.01);
     tap.note = note;
+    drawCurve();
   }
   setTapTone(tap, e);
 }
@@ -841,12 +851,7 @@ function stopTap(e) {
   tap.gain.gain.setTargetAtTime(0, now, 0.03);   // extinction courte, sans clic
   tap.sound.stop(now + 0.3);
   taps.delete(e.pointerId);
-  balanceTaps();
-}
-
-// Plusieurs notes ensemble : volume commun en 1/√n, pour ne pas saturer (une note : inchangé)
-function balanceTaps() {
-  tapBus.gain.setTargetAtTime(1 / Math.sqrt(Math.max(1, taps.size)), audio.currentTime, 0.01);
+  drawCurve();
 }
 
 function stopSound() {

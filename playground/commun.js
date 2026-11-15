@@ -56,10 +56,24 @@ async function requestWakeLock() {
   if (wakeLock || document.visibilityState !== 'visible') return;
   try {
     wakeLock = await navigator.wakeLock.request('screen');
-    wakeLock.onrelease = () => { wakeLock = null; };
+    wakeLock.onrelease = () => { wakeLock = null; showWakeLock('relâché'); };   // DEBUG temporaire
+    showWakeLock('actif');   // DEBUG temporaire
   } catch (e) {
     // API absente ou refusée : la page fonctionne quand même
+    showWakeLock(navigator.wakeLock ? 'refusé : ' + e.message : 'API absente');   // DEBUG temporaire
   }
+}
+
+// DEBUG temporaire : état du verrou de l'écran, en haut à gauche
+function showWakeLock(text) {
+  let el = document.getElementById('debug');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'debug';
+    el.style.cssText = 'position: fixed; left: 0; top: 0; font-size: 3.5vw; background: #ff0; pointer-events: none; z-index: 1;';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'écran : ' + text + (isSecureContext ? '' : ' (page non sécurisée)');
 }
 
 // Le wake lock est relâché automatiquement quand la page passe en arrière-plan : on le redemande
