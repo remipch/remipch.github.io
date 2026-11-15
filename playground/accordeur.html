@@ -72,6 +72,7 @@ const CURVE_RANGE = 12;     // demi-tons affichés de chaque côté de la note c
 const MAJOR_SCALE = [0, 2, 4, 5, 7, 9, 11];   // demi-tons de la gamme majeure depuis la tonique
 const ALTERED_STRIP = 0.1;  // part de la largeur, à gauche, pour les notes altérées (hors gamme)
 const SILENCE = 0.15;       // s sans note avant de considérer que le son s'est arrêté
+const TAP_HYSTERESIS = 0.25;   // demi-ton : zone de tolérance avant de changer de note en glissant
 const HARMONICS = 16;       // harmoniques de la note de référence, d'amplitude 1/rang
 const TAKE_LENGTH = 3;      // s : durée du passage gardé, le plus stable de l'enregistrement
 const MAX_TAKE = 15;        // s : passage stable prolongé jusqu'à cette durée (jointures moins fréquentes)
@@ -773,20 +774,24 @@ function setTapTone(tap, e) {
   tap.gain.gain.setTargetAtTime(level, now, 0.05);
 }
 
-// Extinction sans clic : le volume est figé à sa valeur du moment avant de descendre (annuler les
-// changements en cours peut sinon le faire sauter à une ancienne valeur)
+// Extinction sans clic : descente progressive vers 0 à partir du volume réel du moment. Rien n'est
+// annulé ni relu : annuler les changements en cours peut faire sauter le volume à une ancienne
+// valeur, et certains navigateurs ne renvoient pas le volume réel en cours
 function fadeOut(param, now, tau) {
-  const value = param.value;
-  param.cancelScheduledValues(now);
-  param.setValueAtTime(value, now);
   param.setTargetAtTime(0, now, tau);
+}
+
+// Hauteur sous le doigt (numéro MIDI non arrondi)
+function fingerPitch(e) {
+  const { ratio, h, center, step } = curveGeometry();
+  return center + (h / 2 - e.offsetY * ratio) / step;
 }
 
 // Note la plus proche du doigt sur la courbe : une note marquée (de la gamme), ou n'importe quel
 // demi-ton dans la bande de gauche des notes altérées
 function tappedNote(e) {
   const { ratio, h, center, step, scale, marked, strip } = curveGeometry();
-  const pitch = center + (h / 2 - e.offsetY * ratio) / step;
+  const pitch = fingerPitch(e);
   const altered = scale && e.offsetX * ratio < strip;
   let note = null;
   for (let n = center - CURVE_RANGE; n <= center + CURVE_RANGE; n++) {
@@ -847,7 +852,11 @@ function moveTap(e) {
   const tap = taps.get(e.pointerId);
   if (!tap) return;
   const note = tappedNote(e);
-  if (note !== null && note !== tap.note) {
+  // Zone de tolérance : la note ne change que si le doigt s'est nettement rapproché de la voisine
+  // (un quart de demi-ton de plus). Les petits mouvements parasites, en particulier quand le doigt
+  // se relève, ne la changent pas : sinon on entend un saut de hauteur juste avant l'extinction.
+  const pitch = fingerPitch(e);
+  if (note !== null && note !== tap.note && Math.abs(pitch - note) + TAP_HYSTERESIS < Math.abs(pitch - tap.note)) {
     if (tap.sound.frequency) tap.sound.frequency.setTargetAtTime(noteFreq(note), audio.currentTime, 0.01);
     else tap.sound.playbackRate.setTargetAtTime(noteFreq(note) / take.freq, audio.currentTime, 0.01);
     tap.note = note;
@@ -860,16 +869,16 @@ function stopTap(e) {
   const tap = taps.get(e.pointerId);
   if (!tap) return;
   const now = audio.currentTime;
-  fadeOut(tap.gain.gain, now, 0.04);   // extinction courte, sans clic
-  tap.sound.stop(now + 0.4);
+  fadeOut(tap.gain.gain, now, 0.05);   // extinction courte, sans clic
+  tap.sound.stop(now + 0.5);
   taps.delete(e.pointerId);
   drawCurve();
 }
 
 function stopSound() {
   const now = audio.currentTime;
-  fadeOut(gain.gain, now, 0.03);   // extinction courte, sans clic
-  (osc || source).stop(now + 0.3);
+  fadeOut(gain.gain, now, 0.05);   // extinction courte, sans clic
+  (osc || source).stop(now + 0.5);
   osc = null;
   source = null;
 }
