@@ -66,7 +66,7 @@ const MPM_CLARITY = 0.6;    // MPM : ressemblance minimale (de 0 à 1) pour une 
 // 3 images sur un écran à 60 Hz, toutes les 6 à 120 Hz
 const ANALYSIS_INTERVAL = 50;
 const SMOOTHING = 1;        // s : durée moyennée pour la note affichée
-const CURVE_SECONDS = 5;    // durée affichée par la courbe de hauteur
+const CURVE_SECONDS = 15;   // s : durée affichée par la courbe de hauteur
 const CURVE_GAP = 0.3;      // s : espace laissé dans la courbe à la reprise après un silence
 const CURVE_RANGE = 12;     // demi-tons affichés de chaque côté de la note centrale (une octave)
 const MAJOR_SCALE = [0, 2, 4, 5, 7, 9, 11];   // demi-tons de la gamme majeure depuis la tonique
@@ -74,6 +74,10 @@ const ALTERED_STRIP = 0.1;  // part de la largeur, à gauche, pour les notes alt
 const SILENCE = 0.15;       // s sans note avant de considérer que le son s'est arrêté
 const HARMONICS = 16;       // harmoniques de la note de référence, d'amplitude 1/rang
 const TAKE_LENGTH = 3;      // s : durée du passage gardé, le plus stable de l'enregistrement
+const MAX_TAKE = 15;        // s : passage stable prolongé jusqu'à cette durée (jointures moins fréquentes)
+const STABLE_FACTOR = 2;    // prolongé tant que l'instabilité reste au plus 2 fois celle du meilleur passage
+const GRAIN_SMOOTHING = 0.3;   // s : hauteur lissée pour juger la stabilité (sans le grain de la voix)
+const LEVEL_CENTS = 5;      // stabilité : 1 dB de variation de volume compte comme 5 cents de hauteur
 const MIN_TAKE = 0.5;       // s : passage tenu le plus court accepté, faute de mieux
 const KEEP = 30;            // s : durée maximale de l'enregistrement (on garde la fin)
 const LOOP_FADE = 0.5;      // s : fondu enchaîné à la jointure de la boucle
@@ -118,7 +122,6 @@ let lastHeard = 0;          // instant de la dernière note détectée
 let history = [];           // points de la courbe : { time, pitch } (time : horloge de la courbe ; pitch null : silence)
 let curveShown = false;     // courbe affichée (pas avant la première écoute, ni avec un message d'erreur)
 let curveCenter = null;     // note au centre de la courbe quand la note de référence n'est pas fixe
-let curveGrey = false;
 let curveNow = 0;           // ms, horloge de la courbe : n'avance que pendant le son (bord droit de la courbe)
 let lastFrame = null;       // instant de l'image précédente
 let input = null;           // son du micro dans le graphe audio
@@ -127,15 +130,15 @@ let capturer = null;        // capture du son du micro, pendant l'enregistrement
 let chunks = [];            // blocs de son enregistrés
 let chunksStart = 0;        // numéro du premier échantillon gardé
 let captured = 0;           // échantillons reçus depuis le début de l'enregistrement
-let marks = [];             // analyses pendant l'enregistrement : { pos, pitch } (pitch null si pas de note)
+let marks = [];             // analyses pendant l'enregistrement : { pos, time, pitch, level } (time : horloge de la courbe, pitch null si pas de note, level en dB)
 let take = null;            // passage enregistré, prêt à boucler : { samples, sampleRate, freq }
+let takeSpan = null;        // passage retenu sur la courbe (horloge de la courbe) : { from, to }
 let takeBuffer = null;      // AudioBuffer de take, créé à la première lecture
 let osc = null;             // note de référence synthétisée en cours
 let source = null;          // enregistrement en cours de lecture
 let gain = null;
-let tapSound = null;        // note jouée tant qu'on appuie sur la courbe (oscillateur ou enregistrement)
-let tapGain = null;
-let tapNote = null;
+let taps = new Map();       // notes jouées par les doigts posés sur la courbe : pointerId → { sound, filters, gain, note, recorded }
+let tapBus = null;          // volume commun des notes jouées sur la courbe
 
 function noteName(note) {
   return NAMES[note % 12] + ' ' + (Math.floor(note / 12) - 2);
@@ -190,7 +193,6 @@ function showMeasure(pitch, grey) {
   $('note').textContent = noteName(note);
   $('freq').hidden = true;
   curveShown = true;
-  curveGrey = grey;
   drawCurve();
 }
 
@@ -249,10 +251,11 @@ function drawCurve() {
       continue;
     }
     ctx.fillRect(0, top, w, height);
-    const name = noteName(note);
+    const name = NAMES[note % 12];
     if (scale || !/[♯♭]/.test(name)) {
       ctx.fillStyle = '#888';
-      ctx.fillText(name, unit, y(note));
+      // Numéro d'octave seulement sur la note centrale (et ses octaves)
+      ctx.fillText((note - center) % 12 === 0 ? noteName(note) : name, unit, y(note));
     }
   }
   if (!curveShown) return;
@@ -272,7 +275,8 @@ function drawCurve() {
     const inTune = Math.abs(point.pitch - nearest) * 100 <= IN_TUNE;
     if (last) {
       const mid = { x: (last.x + p.x) / 2, y: (last.y + p.y) / 2 };
-      ctx.strokeStyle = curveGrey ? '#bbb' : inTune ? '#0a0' : '#000';
+      const kept = takeSpan && point.time >= takeSpan.from && point.time <= takeSpan.to;
+      ctx.strokeStyle = kept ? '#07d' : inTune ? '#0a0' : '#000';   // bleu : passage enregistré retenu
       ctx.beginPath();
       ctx.moveTo(lastMid ? lastMid.x : last.x, lastMid ? lastMid.y : last.y);
       ctx.quadraticCurveTo(last.x, last.y, mid.x, mid.y);
@@ -376,23 +380,47 @@ function extract(start, end) {
   return data;
 }
 
-function spread(values) {
-  const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
-  return values.reduce((sum, v) => sum + (v - mean) * (v - mean), 0) / values.length;
+// Instabilité d'un passage (from à to) d'une suite d'analyses avec une note : variance de la hauteur
+// lissée sur GRAIN_SMOOTHING secondes (le grain de la voix ne compte pas, une note qui monte ou
+// ondule si) plus variance du volume, 1 dB comptant comme LEVEL_CENTS cents (en demi-tons²).
+// Sommes cumulées : chaque passage se calcule d'un coup.
+function instability(run) {
+  const n = run.length;
+  const half = GRAIN_SMOOTHING / 2 * audio.sampleRate;
+  const P = new Float64Array(n + 1), P2 = new Float64Array(n + 1);
+  const L = new Float64Array(n + 1), L2 = new Float64Array(n + 1);
+  let a = 0, b = 0, sum = 0;
+  for (let i = 0; i < n; i++) {
+    while (b < n && run[b].pos <= run[i].pos + half) sum += run[b++].pitch;
+    while (run[a].pos < run[i].pos - half) sum -= run[a++].pitch;
+    const p = sum / (b - a);                      // hauteur lissée
+    const l = run[i].level * LEVEL_CENTS / 100;   // volume, en demi-tons équivalents
+    P[i + 1] = P[i] + p;
+    P2[i + 1] = P2[i] + p * p;
+    L[i + 1] = L[i] + l;
+    L2[i + 1] = L2[i] + l * l;
+  }
+  return (from, to) => {
+    const k = to - from + 1;
+    const mp = (P[to + 1] - P[from]) / k, ml = (L[to + 1] - L[from]) / k;
+    return (P2[to + 1] - P2[from]) / k - mp * mp + (L2[to + 1] - L2[from]) / k - ml * ml;
+  };
 }
 
-// Fin de l'enregistrement : on garde le passage de TAKE_LENGTH secondes où la note varie le moins,
-// ou à défaut le plus long passage tenu sans interruption
+// Fin de l'enregistrement : on garde le passage de TAKE_LENGTH secondes le plus stable (hauteur et
+// volume), prolongé tant qu'il reste stable, ou à défaut le plus long passage tenu sans interruption
 function chooseTake() {
   const wanted = TAKE_LENGTH * audio.sampleRate;   // durées en échantillons
   const shortest = MIN_TAKE * audio.sampleRate;
-  const span = part => part[part.length - 1].pos - part[0].pos;
+  const span = (run, from, to) => run[to].pos - run[from].pos;
   let best = null;
-  const consider = part => {
-    const length = Math.min(span(part), wanted);
-    const s = spread(part.map(m => m.pitch));
+  const windows = [];   // passages de TAKE_LENGTH secondes
+  const consider = (run, unstable, from, to) => {
+    const length = Math.min(span(run, from, to), wanted);
+    const s = unstable(from, to);
+    if (length === wanted) windows.push({ run, unstable, from, to, spread: s });
     if (!best || length > best.length || (length === best.length && s < best.spread)) {
-      best = { part, length, spread: s };
+      best = { run, from, to, length, spread: s };
     }
   };
   let runStart = 0;
@@ -400,9 +428,10 @@ function chooseTake() {
     if (i < marks.length && marks[i].pitch !== null) continue;
     const run = marks.slice(runStart, i);   // analyses consécutives avec une note
     runStart = i + 1;
-    if (!run.length || span(run) < shortest) continue;
-    if (span(run) <= wanted) {
-      consider(run);
+    if (!run.length || span(run, 0, run.length - 1) < shortest) continue;
+    const unstable = instability(run);
+    if (span(run, 0, run.length - 1) <= wanted) {
+      consider(run, unstable, 0, run.length - 1);
       continue;
     }
     // Toutes les fenêtres de TAKE_LENGTH secondes du passage
@@ -410,10 +439,27 @@ function chooseTake() {
     for (let from = 0; from < run.length; from++) {
       while (to < run.length && run[to].pos - run[from].pos < wanted) to++;
       if (to === run.length) break;
-      consider(run.slice(from, to + 1));
+      consider(run, unstable, from, to);
     }
   }
   if (!best) return;
+  // Note stable plus longtemps : chaque passage presque aussi stable que le meilleur est prolongé,
+  // d'un côté ou de l'autre, tant que son instabilité reste au plus STABLE_FACTOR fois celle du
+  // meilleur (seuil adapté à chaque voix), jusqu'à MAX_TAKE secondes ; on garde le plus long
+  const limit = STABLE_FACTOR * Math.max(best.spread, 0.02 * 0.02);   // plancher : 2 cents
+  for (const w of windows.filter(w => w.spread <= limit)) {
+    const { run, unstable } = w;
+    let { from, to } = w;
+    while (span(run, from, to) < MAX_TAKE * audio.sampleRate) {
+      const vLeft = from > 0 ? unstable(from - 1, to) : Infinity;
+      const vRight = to < run.length - 1 ? unstable(from, to + 1) : Infinity;
+      if (Math.min(vLeft, vRight) > limit) break;
+      if (vLeft <= vRight) from--;   // le côté qui reste le plus stable
+      else to++;
+    }
+    if (span(run, from, to) > span(best.run, best.from, best.to)) best = { run, from, to };
+  }
+  best.part = best.run.slice(best.from, best.to + 1);
   // Une analyse porte sur les 4096 échantillons qui la précèdent : on part du milieu de la première
   const data = extract(best.part[0].pos - samples.length / 2, best.part[best.part.length - 1].pos);
   const pitch = smooth(best.part.map(m => m.pitch));
@@ -427,6 +473,7 @@ function chooseTake() {
   if (!peak) return;
   for (let i = 0; i < loop.length; i++) loop[i] *= 0.7 / peak;   // volume normalisé
   take = { samples: loop, sampleRate: audio.sampleRate, freq };
+  takeSpan = { from: best.part[0].time, to: best.part[best.part.length - 1].time };   // en bleu sur la courbe
   takeBuffer = null;
   if (follow) setRefNote(note);
   // Mémorisé dans le navigateur ; échec de sauvegarde : l'enregistrement marche quand même
@@ -517,7 +564,12 @@ function listen(now) {
     curveCenter = Math.round(curvePitch);
   }
   // Pendant la lecture, le micro entend le haut-parleur : ces analyses ne comptent pas
-  if (capturer) marks.push({ pos: captured, pitch: playing ? null : raw });
+  if (capturer) {
+    let energy = 0;
+    for (let i = 0; i < samples.length; i++) energy += samples[i] * samples[i];
+    const level = 10 * Math.log10(energy / samples.length + 1e-12);   // volume en dB
+    marks.push({ pos: captured, time: curveNow, pitch: playing ? null : raw, level });
+  }
   if (curvePitch === null) return drawCurve();
   showMeasure(curvePitch, false);
   const note = Math.round(curvePitch);
@@ -698,6 +750,23 @@ function windWave() {
   return audio.createPeriodicWave(real, imag);
 }
 
+// Timbre de l'appui selon la position du doigt : coupure des deux filtres passe-bas, de toutes les
+// harmoniques à gauche jusqu'à la fondamentale seule à droite (2e harmonique environ 25 dB plus
+// bas), et volume qui compense ce que les filtres retirent à la fondamentale
+function tapTone(e, note, recorded) {
+  const x = Math.min(1, Math.max(0, e.offsetX / $('curve').clientWidth));
+  const cutoff = noteFreq(note) * Math.pow(HARMONICS, 1 - x);   // progression régulière à l'oreille
+  const loss = 1 + Math.pow(noteFreq(note) / cutoff, 4);   // atténuation de la fondamentale
+  return { cutoff, level: (recorded ? 1 : 0.5) * loss };
+}
+
+function setTapTone(tap, e) {
+  const { cutoff, level } = tapTone(e, tap.note, tap.recorded);
+  const now = audio.currentTime;
+  for (const filter of tap.filters) filter.frequency.setTargetAtTime(cutoff, now, 0.02);
+  tap.gain.gain.setTargetAtTime(level, now, 0.02);
+}
+
 // Note la plus proche du doigt sur la courbe : une note marquée (de la gamme), ou n'importe quel
 // demi-ton dans la bande de gauche des notes altérées
 function tappedNote(e) {
@@ -712,50 +781,72 @@ function tappedNote(e) {
 }
 
 // Appui sur la courbe : la note joue tant qu'on appuie (indépendante des boutons de lecture) ;
-// en glissant le doigt, on passe d'une note à l'autre. Son de ♪, ou de l'enregistrement si ▶
-// a été le dernier bouton de lecture utilisé.
+// en glissant le doigt, on passe d'une note à l'autre. Chaque doigt joue sa note (plusieurs notes
+// ensemble). Son de ♪, ou de l'enregistrement si ▶ a été le dernier bouton de lecture utilisé.
 function startTap(e) {
   const note = tappedNote(e);
   if (note === null) return;
   $('curve').setPointerCapture(e.pointerId);   // la fin de l'appui arrive même hors du cadre
   wakeAudio();
-  stopTap();
+  stopTap(e);
+  if (!tapBus) {
+    tapBus = audio.createGain();
+    tapBus.connect(audio.destination);
+  }
   const now = audio.currentTime;
   const recorded = lastPlay === 'take' && take;
-  tapGain = audio.createGain();
-  tapGain.connect(audio.destination);
-  tapGain.gain.setValueAtTime(0, now);
-  tapGain.gain.setTargetAtTime(recorded ? 1 : 0.5, now, 0.01);   // attaque courte, sans clic
+  const tap = { note, recorded };
+  const { cutoff, level } = tapTone(e, note, recorded);
+  tap.gain = audio.createGain();
+  tap.gain.connect(tapBus);
+  tap.gain.gain.setValueAtTime(0, now);
+  tap.gain.gain.setTargetAtTime(level, now, 0.01);   // attaque courte, sans clic
+  tap.filters = [0, 1].map(() => {   // deux passe-bas à la suite : pente plus raide
+    const filter = audio.createBiquadFilter();
+    filter.Q.value = 0.7;            // sans résonance
+    filter.frequency.value = cutoff;
+    return filter;
+  });
+  tap.filters[0].connect(tap.filters[1]).connect(tap.gain);
   if (recorded) {
-    tapSound = takeSource(note);
+    tap.sound = takeSource(note);
   } else {
-    tapSound = audio.createOscillator();
-    tapSound.setPeriodicWave(windWave());
-    tapSound.frequency.value = noteFreq(note);
+    tap.sound = audio.createOscillator();
+    tap.sound.setPeriodicWave(windWave());
+    tap.sound.frequency.value = noteFreq(note);
   }
-  tapSound.connect(tapGain);
-  tapSound.start(now);
-  tapNote = note;
+  tap.sound.connect(tap.filters[0]);
+  tap.sound.start(now);
+  taps.set(e.pointerId, tap);
+  balanceTaps();
 }
 
 function moveTap(e) {
-  if (!tapSound) return;
+  const tap = taps.get(e.pointerId);
+  if (!tap) return;
   const note = tappedNote(e);
-  if (note === null || note === tapNote) return;
-  if (tapSound.frequency) tapSound.frequency.setTargetAtTime(noteFreq(note), audio.currentTime, 0.01);
-  else tapSound.playbackRate.setTargetAtTime(noteFreq(note) / take.freq, audio.currentTime, 0.01);
-  tapNote = note;
+  if (note !== null && note !== tap.note) {
+    if (tap.sound.frequency) tap.sound.frequency.setTargetAtTime(noteFreq(note), audio.currentTime, 0.01);
+    else tap.sound.playbackRate.setTargetAtTime(noteFreq(note) / take.freq, audio.currentTime, 0.01);
+    tap.note = note;
+  }
+  setTapTone(tap, e);
 }
 
-function stopTap() {
-  if (!tapSound) return;
+function stopTap(e) {
+  const tap = taps.get(e.pointerId);
+  if (!tap) return;
   const now = audio.currentTime;
-  tapGain.gain.cancelScheduledValues(now);
-  tapGain.gain.setTargetAtTime(0, now, 0.03);   // extinction courte, sans clic
-  tapSound.stop(now + 0.3);
-  tapSound = null;
-  tapGain = null;
-  tapNote = null;
+  tap.gain.gain.cancelScheduledValues(now);
+  tap.gain.gain.setTargetAtTime(0, now, 0.03);   // extinction courte, sans clic
+  tap.sound.stop(now + 0.3);
+  taps.delete(e.pointerId);
+  balanceTaps();
+}
+
+// Plusieurs notes ensemble : volume commun en 1/√n, pour ne pas saturer (une note : inchangé)
+function balanceTaps() {
+  tapBus.gain.setTargetAtTime(1 / Math.sqrt(Math.max(1, taps.size)), audio.currentTime, 0.01);
 }
 
 function stopSound() {
@@ -824,7 +915,7 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState !== 'hidden') return;
   if (listening) stopMic();
   if (playing) stopPlaying();
-  stopTap();
+  for (const pointerId of taps.keys()) stopTap({ pointerId });
 });
 
 setDiapason(loadNumber('diapason', diapason));
